@@ -1,17 +1,13 @@
 package za.co.kmotsepe.vicaria;
 
 /**
- * Title:        jHTTPp2: Java HTTP Filter Proxy
- * Description:  static utility routines
- * Copyright:    Copyright (c) 2001 Benjamin Kohl
-
+ * Title: jHTTPp2: Java HTTP Filter Proxy Description: static utility routines
+ * Copyright: Copyright (c) 2001 Benjamin Kohl
+ *
  * @author Benjamin Kohl
  * @version 0.4.22a
  */
-
-public class VicariaUtils
-{
-
+public class VicariaUtils {
 
 //
 // Copyright (C)1996,1998 by Jef Poskanzer <jef@acme.com>.  All rights reserved.
@@ -39,29 +35,26 @@ public class VicariaUtils
 //
 // Visit the ACME Labs Java page for up-to-date versions of this and other
 // fine Java utilities: http://www.acme.com/java/
-
     /// URLDecoder to go along with java.net.URLEncoder.  Why there isn't
     // already a decoder in the standard library is a mystery to me.
-    public static String urlDecoder( String encoded )
-	{
-	StringBuffer decoded = new StringBuffer();
-	int len = encoded.length();
-	for ( int i = 0; i < len; ++i )
-	    {
-	    if ( encoded.charAt( i ) == '%' && i + 2 < len )
-		{
-		int d1 = Character.digit( encoded.charAt( i + 1 ), 16 );
-		int d2 = Character.digit( encoded.charAt( i + 2 ), 16 );
-		if ( d1 != -1 && d2 != -1 )
-		    decoded.append( (char) ( ( d1 << 4 ) + d2 ) );
-		i += 2;
-		}
-	    else if ( encoded.charAt( i ) == '+' )
-		decoded.append( ' ' );
-	    else
-		decoded.append( encoded.charAt( i ) );
-	    }
-	return decoded.toString();
-	}
+    public static String urlDecoder(String encoded) {
+        StringBuffer decoded = new StringBuffer();
+        int len = encoded.length();
+        for (int i = 0; i < len; ++i) {
+            if (encoded.charAt(i) == '%' && i + 2 < len) {
+                int d1 = Character.digit(encoded.charAt(i + 1), 16);
+                int d2 = Character.digit(encoded.charAt(i + 2), 16);
+                if (d1 != -1 && d2 != -1) {
+                    decoded.append((char) ((d1 << 4) + d2));
+                }
+                i += 2;
+            } else if (encoded.charAt(i) == '+') {
+                decoded.append(' ');
+            } else {
+                decoded.append(encoded.charAt(i));
+            }
+        }
+        return decoded.toString();
+    }
 
 }

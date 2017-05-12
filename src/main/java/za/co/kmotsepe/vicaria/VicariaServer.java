@@ -5,7 +5,6 @@ package za.co.kmotsepe.vicaria;
  * This code comes with NO WARRANTY.
  * More Information and documentation: HTTP://jhttp2.sourceforge.net/
  */
-
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;

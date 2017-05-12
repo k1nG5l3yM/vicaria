@@ -11,7 +11,6 @@ import com.github.lalyos.jfiglet.FigletFont;
  * Distributed under the GNU General Public License; see the README file.
  * This code comes with NO WARRANTY.
  */
-
 /**
  * Title: jHTTPp2: Java HTTP Filter Proxy Description: starts thwe Swing GUI or
  * the console-mode only proxy Copyright: Copyright (c) 2017
