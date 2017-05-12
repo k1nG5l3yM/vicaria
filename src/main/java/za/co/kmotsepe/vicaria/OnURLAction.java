@@ -1,3 +1,5 @@
+package za.co.kmotsepe.vicaria;
+
 /* Written and copyright 2001 Benjamin Kohl.
  * Distributed under the GNU General Public License; see the README file.
  * This code comes with NO WARRANTY.

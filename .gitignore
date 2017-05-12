@@ -1,0 +1,6 @@
+/build/
+/dist/
+/nbactions-release-profile.xml
+/nbactions.xml
+/nb-configuration.xml
+/target/

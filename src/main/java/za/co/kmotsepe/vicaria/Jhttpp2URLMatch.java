@@ -1,3 +1,5 @@
+package za.co.kmotsepe.vicaria;
+
 /**
  * Title:        jHTTPp2: Java HTTP Filter Proxy
  * Copyright:    Copyright (c) 2001-2003 Benjamin Kohl
