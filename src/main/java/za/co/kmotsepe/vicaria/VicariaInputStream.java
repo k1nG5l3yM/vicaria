@@ -7,7 +7,7 @@ package za.co.kmotsepe.vicaria;
 
 import java.io.IOException;
 
-public interface Jhttpp2InputStream
+public interface VicariaInputStream
 {
   /** reads the data */
   public int read_f(byte[] b) throws IOException;

@@ -12,10 +12,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
-	File: Jhttpp2BufferedFilterStream.java
+	File: VicariaBufferedFilterStream.java
 	@author Benjamin Kohl
 */
-public class Jhttpp2ClientInputStream extends BufferedInputStream {
+public class VicariaClientInputStream extends BufferedInputStream {
 	private boolean filter = false;
 	private String buf;
 	private int lread = 0;
@@ -31,8 +31,8 @@ public class Jhttpp2ClientInputStream extends BufferedInputStream {
 	 * This is set to true with requests with bodies, like "POST"
 	 */
 	private boolean body = false;
-	private static Jhttpp2Server server;
-	private Jhttpp2HTTPSession connection;
+	private static VicariaServer server;
+	private VicariaHTTPSession connection;
 	private InetAddress remote_host;
 	private String remote_host_name;
 	private boolean ssl = false;
@@ -51,7 +51,7 @@ public class Jhttpp2ClientInputStream extends BufferedInputStream {
 	public InetAddress getRemoteHost() { return remote_host; }
 	public String getRemoteHostName() { return remote_host_name; }
 
-	public Jhttpp2ClientInputStream(Jhttpp2Server server,Jhttpp2HTTPSession connection,InputStream a)
+	public VicariaClientInputStream(VicariaServer server,VicariaHTTPSession connection,InputStream a)
 	{
 		super(a);
 		this.server = server;
@@ -98,7 +98,8 @@ public class Jhttpp2ClientInputStream extends BufferedInputStream {
 					* -------------------------*/
 					if (server.block_urls && methodID==0 && statuscode!=connection.SC_FILE_REQUEST) {
 						if (server.debug) System.out.println("Searching match...");
-						Jhttpp2URLMatch match=server.findMatch(this.remote_host_name+url);
+						VicariaURLMatch match;
+                                    match = server.findMatch(this.remote_host_name+url);
 						if (match!=null){
 							if (server.debug) System.out.println("Match found!");
 							cookies_enabled=match.getCookiesEnabled();

@@ -9,7 +9,7 @@ package za.co.kmotsepe.vicaria;
  * @version 0.4.22a
  */
 
-public class Jhttpp2Utils
+public class VicariaUtils
 {
 
 

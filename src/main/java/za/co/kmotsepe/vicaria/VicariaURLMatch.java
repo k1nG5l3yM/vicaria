@@ -7,14 +7,14 @@ package za.co.kmotsepe.vicaria;
  * @version 0.2.8
  */
 
-public class Jhttpp2URLMatch implements java.io.Serializable
+public class VicariaURLMatch implements java.io.Serializable
 {
   String match;
   String desc;
   boolean cookies_enabled;
   int actionindex;
 
-  public Jhttpp2URLMatch(String match,boolean cookies_enabled,int actionindex,String description)
+  public VicariaURLMatch(String match,boolean cookies_enabled,int actionindex,String description)
   {
     this.match=match;
     this.cookies_enabled=cookies_enabled;

@@ -18,7 +18,7 @@ import java.util.Vector;
 import java.util.Properties;
 import java.util.Date;
 
-public class Jhttpp2Server implements Runnable {
+public class VicariaServer implements Runnable {
 
     private static final String CRLF = "\r\n";
     private final String VERSION = "0.4.62";
@@ -100,11 +100,11 @@ public class Jhttpp2Server implements Runnable {
         //remote_debug=false;
     }
 
-    public Jhttpp2Server() {
+    public VicariaServer() {
         init();
     }
 
-    public Jhttpp2Server(boolean b) {
+    public VicariaServer(boolean b) {
         //TODO maybe load this from a properties file?
         System.out.println("jHTTPp2 HTTP Proxy Server Release " + getServerVersion() + "\r\n"
                 + "Copyright (c) 2001-2003 Benjamin Kohl <bkohl@users.sourceforge.net>\r\n"
@@ -122,7 +122,7 @@ public class Jhttpp2Server implements Runnable {
         try {
             while (true) {
                 Socket client = listen.accept();
-                new Jhttpp2HTTPSession(this, client);
+                new VicariaHTTPSession(this, client);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -368,8 +368,8 @@ public class Jhttpp2Server implements Runnable {
         return new Date().toString();
     }
 
-    public Jhttpp2URLMatch findMatch(String url) {
-        return (Jhttpp2URLMatch) dic.get(url);
+    public VicariaURLMatch findMatch(String url) {
+        return (VicariaURLMatch) dic.get(url);
     }
 
     public WildcardDictionary getWildcardDictionary() {

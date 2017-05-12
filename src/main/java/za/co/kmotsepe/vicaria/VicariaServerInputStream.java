@@ -9,11 +9,11 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 
-public class Jhttpp2ServerInputStream extends BufferedInputStream implements Jhttpp2InputStream
+public class VicariaServerInputStream extends BufferedInputStream implements VicariaInputStream
 {
-        private Jhttpp2HTTPSession connection;
+        private VicariaHTTPSession connection;
 
-        public Jhttpp2ServerInputStream(Jhttpp2Server server,Jhttpp2HTTPSession connection,InputStream a,boolean filter)
+        public VicariaServerInputStream(VicariaServer server,VicariaHTTPSession connection,InputStream a,boolean filter)
 	{
           super(a);
           this.connection=connection;

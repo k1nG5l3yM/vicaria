@@ -9,20 +9,20 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 /**
-	File: Jhttpp2Read.java
-	reads from a Jhttpp2ClientInputStream and writes to the BufferedOutputStream
+	File: VicariaRead.java
+	reads from a VicariaClientInputStream and writes to the BufferedOutputStream
 
 	@author Benjamin Kohl
 */
-public class Jhttpp2Read extends Thread
+public class VicariaRead extends Thread
 {
 	private final int BUFFER_SIZE=96000;
 	private BufferedInputStream in;
 	private BufferedOutputStream out;
-	private Jhttpp2HTTPSession connection;
-	private static Jhttpp2Server server;
+	private VicariaHTTPSession connection;
+	private static VicariaServer server;
 
-	public Jhttpp2Read(Jhttpp2Server server,Jhttpp2HTTPSession connection,BufferedInputStream l_in, BufferedOutputStream l_out)
+	public VicariaRead(VicariaServer server,VicariaHTTPSession connection,BufferedInputStream l_in, BufferedOutputStream l_out)
 	{
           in=l_in;
 	  out=l_out;
