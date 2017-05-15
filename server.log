@@ -1,0 +1,13 @@
+2017-05-15 11:28:57.383 [main] INFO  za.co.kmotsepe.vicaria.VicariaLauncher - 
+__     __ _                     _                  _   _  _____  _____  ____            ____                            
+\ \   / /(_)  ___   __ _  _ __ (_)  __ _          | | | ||_   _||_   _||  _ \          |  _ \  _ __   ___  __  __ _   _ 
+ \ \ / / | | / __| / _` || '__|| | / _` |  _____  | |_| |  | |    | |  | |_) |  _____  | |_) || '__| / _ \ \ \/ /| | | |
+  \ V /  | || (__ | (_| || |   | || (_| | |_____| |  _  |  | |    | |  |  __/  |_____| |  __/ | |   | (_) | >  < | |_| |
+   \_/   |_| \___| \__,_||_|   |_| \__,_|         |_| |_|  |_|    |_|  |_|             |_|    |_|    \___/ /_/\_\ \__, |
+                                                                                                                  |___/ 
+
+2017-05-15 11:28:57.391 [main] INFO  za.co.kmotsepe.vicaria.VicariaServer - jHTTPp2 HTTP Proxy Server Release 0.4.62 2003-05-20
+Copyright (c) 2001-2003 Benjamin Kohl <bkohl@users.sourceforge.net>
+This software comes with ABSOLUTELY NO WARRANTY OF ANY KIND.
+http://jhttp2.sourceforge.net/
+2017-05-15 11:28:57.493 [main] INFO  za.co.kmotsepe.vicaria.VicariaLauncher - Running on port 8088

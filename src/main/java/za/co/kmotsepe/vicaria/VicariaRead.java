@@ -3,16 +3,26 @@ package za.co.kmotsepe.vicaria;
 /* Written and copyright 2001-2003 Benjamin Kohl.
  * Distributed under the GNU General Public License; see the README file.
  * This code comes with NO WARRANTY.
+ *
+ * Adopted and modified by Kingsley Motsepe (Copyright 2017)
+ * Distributed under the GNU General Public License; see the README file.
+ * This code comes with NO WARRANTY.
+ * More Information and documentation: https://github.com/k1nG5l3yM/vicaria
  */
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * File: VicariaRead.java reads from a VicariaClientInputStream and writes to
  * the BufferedOutputStream
  *
  * @author Benjamin Kohl
+ * @author Kingsley Motsepe <kmotsepe@gmail.com>
+ * @since %G%
+ * @version %I%
  */
 public class VicariaRead extends Thread {
 
@@ -21,6 +31,8 @@ public class VicariaRead extends Thread {
     private BufferedOutputStream out;
     private VicariaHTTPSession connection;
     private static VicariaServer server;
+    
+    private static final Logger logger = LoggerFactory.getLogger(VicariaRead.class);
 
     public VicariaRead(VicariaServer server, VicariaHTTPSession connection, BufferedInputStream l_in, BufferedOutputStream l_out) {
         in = l_in;

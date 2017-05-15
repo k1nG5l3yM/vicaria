@@ -1,11 +1,20 @@
 package za.co.kmotsepe.vicaria;
 
+/*
+ * Adopted and modified by Kingsley Motsepe (Copyright 2017)
+ * Distributed under the GNU General Public License; see the README file.
+ * This code comes with NO WARRANTY.
+ * More Information and documentation: https://github.com/k1nG5l3yM/vicaria
+ */
+
 /**
  * Title: jHTTPp2: Java HTTP Filter Proxy Copyright: Copyright (c) 2001-2003
  * Benjamin Kohl
  *
  * @author Benjamin Kohl
- * @version 0.2.8
+ * @author Kingsley Motsepe <kmotsepe@gmail.com>
+ * @since %G%
+ * @version %I%
  */
 public class VicariaURLMatch implements java.io.Serializable {
 

@@ -4,6 +4,11 @@ package za.co.kmotsepe.vicaria;
  * Distributed under the GNU General Public License; see the README file.
  * This code comes with NO WARRANTY.
  * More Information and documentation: HTTP://jhttp2.sourceforge.net/
+ *
+ * Adopted and modified by Kingsley Motsepe (Copyright 2017)
+ * Distributed under the GNU General Public License; see the README file.
+ * This code comes with NO WARRANTY.
+ * More Information and documentation: https://github.com/k1nG5l3yM/vicaria
  */
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,9 +21,18 @@ import java.io.*;
 import java.util.Vector;
 import java.util.Properties;
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * @author Benjamin Kohl
+ * @author Kingsley Motsepe <kmotsepe@gmail.com>
+ * @since %G%
+ * @version %I%
+ */
 public class VicariaServer implements Runnable {
-
+    
+    //TODO Most properties here need to load from properties file. Especially credentials
     private static final String CRLF = "\r\n";
     private final String VERSION = "0.4.62";
     private final String V_SPECIAL = " 2003-05-20";
@@ -42,6 +56,7 @@ public class VicariaServer implements Runnable {
     private WildcardDictionary dic = new WildcardDictionary();
     private Vector urlactions = new Vector();
 
+    //TODO This has to go. Will place in default config file :)
     public final int DEFAULT_SERVER_PORT = 8088;
     public final String WEB_CONFIG_FILE = "admin/jp2-config";
 
@@ -51,6 +66,8 @@ public class VicariaServer implements Runnable {
 
     public long config_auth = 0;
     public long config_session_id = 0;
+    
+    //TODO This has to go. Will place in default config file :)
     public String config_user = "root";
     public String config_password = "geheim";
 
@@ -65,6 +82,8 @@ public class VicariaServer implements Runnable {
     public String log_access_filename = "paccess.log";
     public boolean webconfig = true;
     public boolean www_server = true;
+    
+    private static final Logger logger = LoggerFactory.getLogger(VicariaServer.class);
 
     void init() {
         try {
@@ -104,8 +123,8 @@ public class VicariaServer implements Runnable {
     }
 
     public VicariaServer(boolean b) {
-        //TODO maybe load this from a properties file?
-        System.out.println("jHTTPp2 HTTP Proxy Server Release " + getServerVersion() + "\r\n"
+        //TODO maybe load this from a properties/text file?
+        logger.info("jHTTPp2 HTTP Proxy Server Release " + getServerVersion() + "\r\n"
                 + "Copyright (c) 2001-2003 Benjamin Kohl <bkohl@users.sourceforge.net>\r\n"
                 + "This software comes with ABSOLUTELY NO WARRANTY OF ANY KIND.\r\n"
                 + "http://jhttp2.sourceforge.net/");
@@ -304,7 +323,7 @@ public class VicariaServer implements Runnable {
             }
             logfile.flush();
             if (debug) {
-                System.out.println(s);
+                logger.debug(s);
             }
         } catch (Exception e) {
             e.printStackTrace();

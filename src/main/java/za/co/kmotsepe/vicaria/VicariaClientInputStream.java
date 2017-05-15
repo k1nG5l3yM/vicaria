@@ -3,6 +3,11 @@ package za.co.kmotsepe.vicaria;
 /* Written and copyright 2001-2003 Benjamin Kohl.
  * Distributed under the GNU General Public License; see the README file.
  * This code comes with NO WARRANTY.
+ * 
+ * Adopted and modified by Kingsley Motsepe (Copyright 2017)
+ * Distributed under the GNU General Public License; see the README file.
+ * This code comes with NO WARRANTY.
+ * More Information and documentation: https://github.com/k1nG5l3yM/vicaria
  */
 import java.io.IOException;
 import java.io.InputStream;
