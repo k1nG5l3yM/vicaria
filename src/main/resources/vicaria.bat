@@ -6,4 +6,4 @@ REM NOTE: REM CONSOLE OUTPUT MODE
 REM ----------------------------------------
 REM less memory required, faster startup, but no JButton's to click :-)
 REM Requires the Java Runtime Environment (JRE) or the Java Development Kit (JDK/SDK)
-java -jar vicaria-0.1.0-SNAPSHOT-shaded.jar
+java -jar vicaria.jar
