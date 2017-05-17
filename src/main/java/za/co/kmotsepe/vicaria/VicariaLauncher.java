@@ -29,11 +29,10 @@ public class VicariaLauncher {
 
     public static void main(String[] args) {
         //load ascii banner
-        String asciiArt = FigletFont.convertOneLine("Vicaria - HTTP - Proxy");
+        String asciiArt = FigletFont.convertOneLine(".:Vicaria - HTTP - Proxy:.");
         LOGGER.info("\n" + asciiArt);
         
-        //TODO the boolean actually does nothing. To relook code
-        server = new VicariaServer(true);
+        server = new VicariaServer();
         
         //TODO maybe 'too much admin' here? Better to have this in the server class instead
         if (VicariaServer.error) {

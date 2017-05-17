@@ -19,7 +19,6 @@ import java.net.BindException;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Properties;
 import java.util.Date;
 import org.slf4j.Logger;
@@ -39,7 +38,6 @@ public class VicariaServer implements Runnable {
     private static final String V_SPECIAL = " 2003-05-20";
     private final String HTTP_VERSION = "HTTP/1.1";
 
-    //private final String MAIN_LOGFILE = "server.log";
     private final String DATA_FILE = "server.data";
     private final String SERVER_PROPERTIES_FILE = "server.properties";
 
@@ -88,46 +86,27 @@ public class VicariaServer implements Runnable {
 
     void init() {
 
-//logfile = new BufferedWriter(new FileWriter(MAIN_LOGFILE, true));
         LOGGER.info("Server startup");
-        //writeLog("server startup...");
 
         try {
             restoreSettings();
         } catch (Exception e_load) {
             LOGGER.error("Error while resoring settings: " + e_load.getMessage());
-            //setErrorMsg("Error while resoring settings: " + e_load.getMessage());
         }
         
         try {
             listen = new ServerSocket(port);
         } catch (BindException e_bind_socket) {
-           LOGGER.error("Socket " + port + " is already in use (Another jHTTPp2 proxy running?) " + e_bind_socket.getMessage());
-            //setErrorMsg("Socket " + port + " is already in use (Another jHTTPp2 proxy running?) " + e_bind_socket.getMessage());
+           LOGGER.error("Socket " + port + " is already in use (Another Vicaria proxy running?) " + e_bind_socket.getMessage());
         } catch (IOException e_io_socket) {
-            LOGGER.error("IO Exception while creating server socket on port " + port + ". " + e_io_socket.getMessage());
-            //setErrorMsg("IO Exception while creating server socket on port " + port + ". " + e_io_socket.getMessage());
+            LOGGER.error("Error while creating server socket on port " + port + ". " + e_io_socket.getMessage());
         }
-
-        /*if (error) {
-            writeLog(error_msg);
-        }*/
-        //if (debug) remote_debug_vector=new Vector();
-        //remote_debug=false;
     }
 
     public VicariaServer() {
-        //init();
-        bootStrap();
-    }
-
-    public VicariaServer(boolean b) {
         //TODO maybe load this from a properties/text file?
-        LOGGER.info("jHTTPp2 HTTP Proxy Server Release " + getServerVersion() + "\r\n"
-                + "Copyright (c) 2001-2003 Benjamin Kohl <bkohl@users.sourceforge.net>\r\n"
-                + "This software comes with ABSOLUTELY NO WARRANTY OF ANY KIND.\r\n"
-                + "http://jhttp2.sourceforge.net/");
-        //init();
+        //TODO have launcher message display in 'bootstrap' function?
+        
         bootStrap();
     }
 
@@ -137,10 +116,10 @@ public class VicariaServer implements Runnable {
      */
     void serve() {
         LOGGER.info("Server running");
-       // writeLog("Server running.");
         try {
             while (true) {
                 Socket client = listen.accept();
+                //TODO rather have a session builder? 
                 new VicariaHTTPSession(this, client);
             }
         } catch (IOException e) {
@@ -159,7 +138,7 @@ public class VicariaServer implements Runnable {
     }
 
     /**
-     * Tests what method is used with the reqest
+     * Tests what method is used with the request
      *
      * @param d
      * @return -1 if the server doesn't support the method
@@ -477,6 +456,10 @@ public class VicariaServer implements Runnable {
      * used for calling the overridden method init()
      */
     private void bootStrap() {
+        LOGGER.info("Vicaria HTTP Proxy Server Release " + getServerVersion() + "\r\n"
+                + "Copyright (c) 2017 Kingsley Motsepe\r\n"
+                + "This software comes with ABSOLUTELY NO WARRANTY OF ANY KIND.\r\n"
+                + "https://github.com/k1nG5l3yM/vicaria");
         init();
     }
 
