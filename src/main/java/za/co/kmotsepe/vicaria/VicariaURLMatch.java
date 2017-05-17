@@ -22,18 +22,33 @@ public class VicariaURLMatch implements java.io.Serializable {
     String desc;
     boolean cookies_enabled;
     int actionindex;
-
+    
+    /**
+     * 
+     * @param match
+     * @param cookies_enabled
+     * @param actionindex
+     * @param description 
+     */
     public VicariaURLMatch(String match, boolean cookies_enabled, int actionindex, String description) {
         this.match = match;
         this.cookies_enabled = cookies_enabled;
         this.actionindex = actionindex;
         this.desc = description;
     }
-
+    
+    /**
+     * 
+     * @return 
+     */
     public String getMatch() {
         return match;
     }
-
+    
+    /**
+     * 
+     * @return 
+     */
     public boolean getCookiesEnabled() {
         return cookies_enabled;
     }
@@ -41,11 +56,20 @@ public class VicariaURLMatch implements java.io.Serializable {
     public int getActionIndex() {
         return actionindex;
     }
-
+    
+    /**
+     * 
+     * @return 
+     */
     public String getDescription() {
         return desc;
     }
-
+    
+    /**
+     * 
+     * @return 
+     */
+    @Override
     public String toString() {
         return "\"" + match + "\" " + desc;
     }

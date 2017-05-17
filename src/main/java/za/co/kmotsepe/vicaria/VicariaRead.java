@@ -27,28 +27,29 @@ import org.slf4j.LoggerFactory;
 public class VicariaRead extends Thread {
 
     private final int BUFFER_SIZE = 96000;
-    private BufferedInputStream in;
-    private BufferedOutputStream out;
-    private VicariaHTTPSession connection;
+    private final BufferedInputStream in;
+    private final BufferedOutputStream out;
+    private final VicariaHTTPSession connection;
     private static VicariaServer server;
     
-    private static final Logger logger = LoggerFactory.getLogger(VicariaRead.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VicariaRead.class);
 
     public VicariaRead(VicariaServer server, VicariaHTTPSession connection, BufferedInputStream l_in, BufferedOutputStream l_out) {
         in = l_in;
         out = l_out;
         this.connection = connection;
-        this.server = server;
+        VicariaRead.server = server;
         setPriority(Thread.MIN_PRIORITY);
-        start();
+        startSelf();
     }
 
+    @Override
     public void run() {
         read();
     }
 
     private void read() {
-        int bytes_read = 0;
+        int bytes_read;
         byte[] buf = new byte[BUFFER_SIZE];
         try {
             while (true) {
@@ -65,7 +66,7 @@ public class VicariaRead extends Thread {
         }
 
         try {
-            if (connection.getStatus() != connection.SC_CONNECTING_TO_HOST) // *uaaahhh*: fixes a very strange bug
+            if (connection.getStatus() != VicariaHTTPSession.SC_CONNECTING_TO_HOST) // *uaaahhh*: fixes a very strange bug
             {
                 connection.getLocalSocket().close();
             }
@@ -74,13 +75,22 @@ public class VicariaRead extends Thread {
             // displays an empty page because jhttpp2
             // closes the connection..... so close the downstream socket only when NOT connecting to a new host....
         } catch (IOException e_socket_close) {
+            LOGGER.error(e_socket_close.getMessage());
         }
     }
 
     public void close() {
         try {
             in.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
         }
+    }
+    
+    /**
+     * 
+     */
+    private void startSelf() {
+        this.start();
     }
 }

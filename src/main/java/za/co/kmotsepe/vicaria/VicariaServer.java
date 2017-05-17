@@ -17,8 +17,9 @@ import java.net.InetAddress;
 import java.net.BindException;
 
 import java.io.*;
-
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Properties;
 import java.util.Date;
 import org.slf4j.Logger;
@@ -31,14 +32,14 @@ import org.slf4j.LoggerFactory;
  * @version %I%
  */
 public class VicariaServer implements Runnable {
-    
+
     //TODO Most properties here need to load from properties file. Especially credentials
     private static final String CRLF = "\r\n";
-    private final String VERSION = "0.4.62";
-    private final String V_SPECIAL = " 2003-05-20";
+    private static final String VERSION = "0.4.62";
+    private static final String V_SPECIAL = " 2003-05-20";
     private final String HTTP_VERSION = "HTTP/1.1";
 
-    private final String MAIN_LOGFILE = "server.log";
+    //private final String MAIN_LOGFILE = "server.log";
     private final String DATA_FILE = "server.data";
     private final String SERVER_PROPERTIES_FILE = "server.properties";
 
@@ -54,7 +55,7 @@ public class VicariaServer implements Runnable {
 
     private boolean enable_cookies_by_default = true;
     private WildcardDictionary dic = new WildcardDictionary();
-    private Vector urlactions = new Vector();
+    private ArrayList urlactions;
 
     //TODO This has to go. Will place in default config file :)
     public final int DEFAULT_SERVER_PORT = 8088;
@@ -66,7 +67,7 @@ public class VicariaServer implements Runnable {
 
     public long config_auth = 0;
     public long config_session_id = 0;
-    
+
     //TODO This has to go. Will place in default config file :)
     public String config_user = "root";
     public String config_password = "geheim";
@@ -82,53 +83,52 @@ public class VicariaServer implements Runnable {
     public String log_access_filename = "paccess.log";
     public boolean webconfig = true;
     public boolean www_server = true;
-    
-    private static final Logger logger = LoggerFactory.getLogger(VicariaServer.class);
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(VicariaServer.class);
 
     void init() {
-        try {
-            logfile = new BufferedWriter(new FileWriter(MAIN_LOGFILE, true));
-        } catch (Exception e_logfile) {
-            setErrorMsg("Unable to open the main log file.");
-            if (logfile == null) {
-                setErrorMsg("jHTTPp2 need write permission for the file " + MAIN_LOGFILE);
-            }
-            error_msg += " " + e_logfile.getMessage();
-        }
-        writeLog("server startup...");
+
+//logfile = new BufferedWriter(new FileWriter(MAIN_LOGFILE, true));
+        LOGGER.info("Server startup");
+        //writeLog("server startup...");
 
         try {
             restoreSettings();
         } catch (Exception e_load) {
-            setErrorMsg("Error while resoring settings: " + e_load.getMessage());
+            LOGGER.error("Error while resoring settings: " + e_load.getMessage());
+            //setErrorMsg("Error while resoring settings: " + e_load.getMessage());
         }
+        
         try {
             listen = new ServerSocket(port);
         } catch (BindException e_bind_socket) {
-            setErrorMsg("Socket " + port + " is already in use (Another jHTTPp2 proxy running?) " + e_bind_socket.getMessage());
+           LOGGER.error("Socket " + port + " is already in use (Another jHTTPp2 proxy running?) " + e_bind_socket.getMessage());
+            //setErrorMsg("Socket " + port + " is already in use (Another jHTTPp2 proxy running?) " + e_bind_socket.getMessage());
         } catch (IOException e_io_socket) {
-            setErrorMsg("IO Exception while creating server socket on port " + port + ". " + e_io_socket.getMessage());
+            LOGGER.error("IO Exception while creating server socket on port " + port + ". " + e_io_socket.getMessage());
+            //setErrorMsg("IO Exception while creating server socket on port " + port + ". " + e_io_socket.getMessage());
         }
 
-        if (error) {
+        /*if (error) {
             writeLog(error_msg);
-            return;
-        }
+        }*/
         //if (debug) remote_debug_vector=new Vector();
         //remote_debug=false;
     }
 
     public VicariaServer() {
-        init();
+        //init();
+        bootStrap();
     }
 
     public VicariaServer(boolean b) {
         //TODO maybe load this from a properties/text file?
-        logger.info("jHTTPp2 HTTP Proxy Server Release " + getServerVersion() + "\r\n"
+        LOGGER.info("jHTTPp2 HTTP Proxy Server Release " + getServerVersion() + "\r\n"
                 + "Copyright (c) 2001-2003 Benjamin Kohl <bkohl@users.sourceforge.net>\r\n"
                 + "This software comes with ABSOLUTELY NO WARRANTY OF ANY KIND.\r\n"
                 + "http://jhttp2.sourceforge.net/");
-        init();
+        //init();
+        bootStrap();
     }
 
     /**
@@ -136,18 +136,19 @@ public class VicariaServer implements Runnable {
      * Jhttpp2Connection
      */
     void serve() {
-        writeLog("Server running.");
+        LOGGER.info("Server running");
+       // writeLog("Server running.");
         try {
             while (true) {
                 Socket client = listen.accept();
                 new VicariaHTTPSession(this, client);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            writeLog("Exception in Jhttpp2Server.serve(): " + e.toString());
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
+    @Override
     public void run() {
         serve();
     }
@@ -160,6 +161,7 @@ public class VicariaServer implements Runnable {
     /**
      * Tests what method is used with the reqest
      *
+     * @param d
      * @return -1 if the server doesn't support the method
      */
     public int getHttpMethod(String d) {
@@ -195,37 +197,40 @@ public class VicariaServer implements Runnable {
         return "jHTTPp2/" + getServerVersion();
     }
 
-    public String getServerVersion() {
+    public static String getServerVersion() {
         return VERSION + V_SPECIAL;
     }
 
     /**
      * saves all settings with a ObjectOutputStream into a file
      *
+     * @throws java.io.IOException
      * @since 0.2.10
      */
     public void saveSettings() throws IOException {
-        serverproperties.setProperty("server.http-proxy", new Boolean(use_proxy).toString());
+        serverproperties.setProperty("server.http-proxy", Boolean.toString(use_proxy));
         serverproperties.setProperty("server.http-proxy.hostname", proxy.getHostAddress());
-        serverproperties.setProperty("server.http-proxy.port", new Integer(proxy_port).toString());
-        serverproperties.setProperty("server.filter.http", new Boolean(filter_http).toString());
-        serverproperties.setProperty("server.filter.url", new Boolean(block_urls).toString());
+        serverproperties.setProperty("server.http-proxy.port", Integer.toString(proxy_port));
+        serverproperties.setProperty("server.filter.http", Boolean.toString(filter_http));
+        serverproperties.setProperty("server.filter.url", Boolean.toString(block_urls));
         serverproperties.setProperty("server.filter.http.useragent", http_useragent);
-        serverproperties.setProperty("server.enable-cookies-by-default", new Boolean(enable_cookies_by_default).toString());
-        serverproperties.setProperty("server.debug-logging", new Boolean(debug).toString());
-        serverproperties.setProperty("server.port", new Integer(port).toString());
-        serverproperties.setProperty("server.access.log", new Boolean(log_access).toString());
+        serverproperties.setProperty("server.enable-cookies-by-default", Boolean.toString(enable_cookies_by_default));
+        serverproperties.setProperty("server.debug-logging", Boolean.toString(debug));
+        serverproperties.setProperty("server.port", Integer.toString(port));
+        serverproperties.setProperty("server.access.log", Boolean.toString(log_access));
         serverproperties.setProperty("server.access.log.filename", log_access_filename);
-        serverproperties.setProperty("server.webconfig", new Boolean(webconfig).toString());
-        serverproperties.setProperty("server.www", new Boolean(www_server).toString());
+        serverproperties.setProperty("server.webconfig", Boolean.toString(webconfig));
+        serverproperties.setProperty("server.www", Boolean.toString(www_server));
         serverproperties.setProperty("server.webconfig.username", config_user);
         serverproperties.setProperty("server.webconfig.password", config_password);
         storeServerProperties();
 
-        ObjectOutputStream file = new ObjectOutputStream(new FileOutputStream(DATA_FILE));
-        file.writeObject(dic);
-        file.writeObject(urlactions);
-        file.close();
+        try (ObjectOutputStream file = new ObjectOutputStream(new FileOutputStream(DATA_FILE))) {
+            file.writeObject(dic);
+            file.writeObject(urlactions);
+        } catch (Exception exception) {
+            LOGGER.error(exception.getMessage());
+        }
     }
 
     /**
@@ -236,22 +241,23 @@ public class VicariaServer implements Runnable {
     public void restoreSettings()//throws Exception
     {
         getServerProperties();
-        use_proxy = new Boolean(serverproperties.getProperty("server.http-proxy", "false")).booleanValue();
+        use_proxy = Boolean.valueOf(serverproperties.getProperty("server.http-proxy", "false"));
         try {
             proxy = InetAddress.getByName(serverproperties.getProperty("server.http-proxy.hostname", "127.0.0.1"));
         } catch (UnknownHostException e) {
+            LOGGER.error(e.getMessage());
         }
-        proxy_port = new Integer(serverproperties.getProperty("server.http-proxy.port", "8080")).intValue();
-        block_urls = new Boolean(serverproperties.getProperty("server.filter.url", "false")).booleanValue();
+        proxy_port = Integer.parseInt(serverproperties.getProperty("server.http-proxy.port", "8080"));
+        block_urls = Boolean.valueOf(serverproperties.getProperty("server.filter.url", "false"));
         http_useragent = serverproperties.getProperty("server.filter.http.useragent", "Mozilla/4.0 (compatible; MSIE 4.0; WindowsNT 5.0)");
-        filter_http = new Boolean(serverproperties.getProperty("server.filter.http", "false")).booleanValue();
-        enable_cookies_by_default = new Boolean(serverproperties.getProperty("server.enable-cookies-by-default", "true")).booleanValue();
-        debug = new Boolean(serverproperties.getProperty("server.debug-logging", "false")).booleanValue();
-        port = new Integer(serverproperties.getProperty("server.port", "8088")).intValue();
-        log_access = new Boolean(serverproperties.getProperty("server.access.log", "false")).booleanValue();
+        filter_http = Boolean.valueOf(serverproperties.getProperty("server.filter.http", "false"));
+        enable_cookies_by_default = Boolean.valueOf(serverproperties.getProperty("server.enable-cookies-by-default", "true"));
+        debug = Boolean.valueOf(serverproperties.getProperty("server.debug-logging", "false"));
+        port = Integer.parseInt(serverproperties.getProperty("server.port", "8088"));
+        log_access = Boolean.parseBoolean(serverproperties.getProperty("server.access.log", "false"));
         log_access_filename = serverproperties.getProperty("server.access.log.filename", "paccess.log");
-        webconfig = new Boolean(serverproperties.getProperty("server.webconfig", "true")).booleanValue();
-        www_server = new Boolean(serverproperties.getProperty("server.www", "true")).booleanValue();
+        webconfig = Boolean.parseBoolean(serverproperties.getProperty("server.webconfig", "true"));
+        www_server = Boolean.parseBoolean(serverproperties.getProperty("server.www", "true"));
         config_user = serverproperties.getProperty("server.webconfig.username", "root");
         config_password = serverproperties.getProperty("server.webconfig.password", "geheim");
 
@@ -263,7 +269,8 @@ public class VicariaServer implements Runnable {
             File file = new File(DATA_FILE);
             if (!file.exists()) {
                 if (!file.createNewFile() || !file.canWrite()) {
-                    setErrorMsg("Can't create or write to file " + file.toString());
+                    throw new IOException("Can't create or write to file " + file.toString());
+                    //setErrorMsg("Can't create or write to file " + file.toString());
                 } else {
                     saveSettings();
                 }
@@ -271,11 +278,12 @@ public class VicariaServer implements Runnable {
 
             obj_in = new ObjectInputStream(new FileInputStream(file));
             dic = (WildcardDictionary) obj_in.readObject();
-            urlactions = (Vector) obj_in.readObject();
+            //Object[] objects = (Object[])obj_in.readObject();
+            urlactions = new ArrayList(Arrays.asList((Object[])obj_in.readObject()));
             obj_in.close();
-        } catch (IOException e) {
-            setErrorMsg("restoreSettings(): " + e.getMessage());
-        } catch (ClassNotFoundException e_class_not_found) {
+        } catch (IOException | ClassNotFoundException e) {
+            LOGGER.error(e.getMessage());
+            //setErrorMsg("restoreSettings(): " + e.getMessage());
         }
     }
 
@@ -300,18 +308,23 @@ public class VicariaServer implements Runnable {
         http_useragent = ua;
     }
 
+    //TODO this won't be needed anymore. Rather use SLF4J
     /**
      * writes into the server log file and adds a new line
      *
+     * @param s
      * @since 0.2.21
      */
     public void writeLog(String s) {
         writeLog(s, true);
     }
 
+    //TODO this won't be needed anymore. Rather use SLF4J
     /**
      * writes to the server log file
      *
+     * @param s
+     * @param b
      * @since 0.2.21
      */
     public void writeLog(String s, boolean b) {
@@ -323,10 +336,10 @@ public class VicariaServer implements Runnable {
             }
             logfile.flush();
             if (debug) {
-                logger.debug(s);
+                LOGGER.debug(s);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -336,7 +349,8 @@ public class VicariaServer implements Runnable {
             logfile.flush();
             logfile.close();
             access_logfile.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -348,6 +362,7 @@ public class VicariaServer implements Runnable {
      * Functions for the jHTTPp2 statistics: How many connections Bytes
      * read/written
      *
+     * @param written
      * @since 0.3.0
      */
     public void addBytesWritten(int written) {
@@ -394,7 +409,7 @@ public class VicariaServer implements Runnable {
         return dic;
     }
 
-    public Vector getURLActions() {
+    public ArrayList getURLActions() {
         return urlactions;
     }
 
@@ -412,7 +427,7 @@ public class VicariaServer implements Runnable {
     }
 
     /**
-     * @since 0.4.10a
+     * @return @since 0.4.10a
      */
     public Properties getServerProperties() {
         if (serverproperties == null) {
@@ -441,20 +456,28 @@ public class VicariaServer implements Runnable {
     }
 
     /**
+     * @param s
      * @since 0.4.10a
      */
     public void logAccess(String s) {
         try {
             access_logfile.write("[" + new Date().toString() + "] " + s + "\r\n");
             access_logfile.flush();
-        } catch (Exception e) {
-            writeLog("Jhttpp2Server.access(String): " + e.getMessage());
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
     public void shutdownServer() {
         closeLog();
         System.exit(0);
+    }
+
+    /**
+     * used for calling the overridden method init()
+     */
+    private void bootStrap() {
+        init();
     }
 
 }

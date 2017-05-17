@@ -4,3 +4,6 @@
 /nbactions.xml
 /nb-configuration.xml
 /target/
+/paccess.log
+/server.data
+/server.properties

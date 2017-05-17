@@ -1,9 +1,5 @@
 package za.co.kmotsepe.vicaria;
 
-import com.github.lalyos.jfiglet.FigletFont;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /* Written and copyright 2001-2003 Benjamin Kohl.
  * Distributed under the GNU General Public License; see the README file.
  * This code comes with NO WARRANTY.
@@ -13,6 +9,10 @@ import org.slf4j.LoggerFactory;
  * This code comes with NO WARRANTY.
  * More Information and documentation: https://github.com/k1nG5l3yM/vicaria
  */
+
+import com.github.lalyos.jfiglet.FigletFont;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Application launcher class
@@ -31,7 +31,6 @@ public class VicariaLauncher {
         //load ascii banner
         String asciiArt = FigletFont.convertOneLine("Vicaria - HTTP - Proxy");
         LOGGER.info("\n" + asciiArt);
-        //System.out.println(asciiArt);
         
         //TODO the boolean actually does nothing. To relook code
         server = new VicariaServer(true);

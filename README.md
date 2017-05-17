@@ -1,45 +1,23 @@
-================================================================
+#.:Vicaria:.
 
-			 README
+##What is it?
+Vicaria is a Java based open source http proxy server cloned and rebranded from the Java HTTP Proxy Server (jHTTPp2), developed by Benjamin Kohl - http://jhttp2.sourceforge.net  
+So, jHTTPp2 is the foundation and Vicaria simply compliments it.
 
-	jHTTPp2 - OpenSource HTTP Proxy Server
+##Status
+The project is still in its infancy stage and should be treated as experimental and not production ready, since the original project development and support stopped in 2006. Current project (Vicaria) hopefully will pick up from where things stopped and progress further to a mature product. 
 
-	This software requires the Java Runtime Environment (JRE)
+##Download and Quick start
+###Starting up
+Assuming Java is already on your machine, in your command line, execute the following: 'java -jar vicaria.jar'. This will spawn up an instance of the server with default configurations and listening on 'http://localhost:8088'. Feel free to update the configs under the 'server.properties' file. To understand more on the config, please refer to manual located in the 'htdocs' directory.
 
-================================================================
+##Getting Help
+Should something go wrong and you'd like to report a bug, please do so [here](https://github.com/k1nG5l3yM/vicaria/issues) at Github issues or reach out on [StackOverflow](http://stackoverflow.com/questions/tagged/vicaria) (using the [vicaria](http://stackoverflow.com/questions/tagged/vicaria) tag)
 
-The PDF-File "htdocs/jp2-user-manual.pdf" contains the full user 
-manual. Please read it first.
+##For Developers
+###How You Can Contribute
+Project is still a work in progress and no standards are put in place etc - Still working on that. However, please feel free to fork project.   
+Please, please, please do report any issues you pick up [here](https://github.com/k1nG5l3yM/vicaria/issues). Would appreciate that.
 
-----------------------------------------------------------------
-Starting the proxy-server
-----------------------------------------------------------------
-Use the file "jhttpp2.bat" to start the proxy.
-
-If that doesn't work (or if you're using Linux or Max OS) than
-you can type in a console window:
-
-	java -jar Jhttpp2.jar
-
-	OR
-
-	java -classpath Jhttpp2.jar Jhttpp2Launcher
-
-This should told the Java VM to start jHTTPp2 in the console
-(text) mode with using the Jhttpp2.jar file as classpath 
-
-Caution: "Jhttpp2Launcher" is case-sensitive (or you will get
-"Class not found error" or something)
-To use the "java" command anywhere, it must be in your PATH
-variable.
-
-Now you should see a message like:
-
-	jHTTPp2 HTTP Proxy Server Release 0.4.50
-	Copyright (c) 2001-2003 by Benjamin Kohl
-	http://jhttp2.sourceforge.net/
-	Running on port 8088
-
-Then start your webbrowser and go to:
-
-	http://localhost:8088/
+##License
+Vicaria is under GPL2. For more info, please go [here](https://github.com/k1nG5l3yM/vicaria/blob/master/LICENSE)

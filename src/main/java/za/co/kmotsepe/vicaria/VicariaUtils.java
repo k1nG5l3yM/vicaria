@@ -7,12 +7,13 @@ package za.co.kmotsepe.vicaria;
  * More Information and documentation: https://github.com/k1nG5l3yM/vicaria
  */
 
+
 /**
  * Title: jHTTPp2: Java HTTP Filter Proxy Description: static utility routines
  * Copyright: Copyright (c) 2001 Benjamin Kohl
  *
  * @author Benjamin Kohl
- * @author Kingsley Motsepe
+ * @author Kingsley Motsepe <kmotsepe@gmail.com>
  * @since %G%
  * @version %I%
  */
@@ -44,10 +45,8 @@ public class VicariaUtils {
 //
 // Visit the ACME Labs Java page for up-to-date versions of this and other
 // fine Java utilities: http://www.acme.com/java/
-    /// URLDecoder to go along with java.net.URLEncoder.  Why there isn't
-    // already a decoder in the standard library is a mystery to me.
     public static String urlDecoder(String encoded) {
-        StringBuffer decoded = new StringBuffer();
+        StringBuilder decoded = new StringBuilder();
         int len = encoded.length();
         for (int i = 0; i < len; ++i) {
             if (encoded.charAt(i) == '%' && i + 2 < len) {

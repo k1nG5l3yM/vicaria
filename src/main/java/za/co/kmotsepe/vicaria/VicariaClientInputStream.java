@@ -14,15 +14,20 @@ import java.io.InputStream;
 import java.io.BufferedInputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * File: VicariaBufferedFilterStream.java
  *
  * @author Benjamin Kohl
+ * @author KIngsley Motsepe <kmotsepe@gmail.com>
+ * @since %G%
+ * @version %I%
  */
 public class VicariaClientInputStream extends BufferedInputStream {
 
-    private boolean filter = false;
+    //private boolean filter = false;
     private String buf;
     private int lread = 0;
     /**
@@ -38,7 +43,7 @@ public class VicariaClientInputStream extends BufferedInputStream {
      */
     private boolean body = false;
     private static VicariaServer server;
-    private VicariaHTTPSession connection;
+    private final VicariaHTTPSession vicariaHttpSession;
     private InetAddress remote_host;
     private String remote_host_name;
     private boolean ssl = false;
@@ -49,6 +54,8 @@ public class VicariaClientInputStream extends BufferedInputStream {
     public String method;
     public int remote_port = 0;
     public int post_data_len = 0;
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(VicariaAdmin.class);
 
     public int getHeaderLength() {
         return header_length;
@@ -62,19 +69,22 @@ public class VicariaClientInputStream extends BufferedInputStream {
         return remote_host_name;
     }
 
-    public VicariaClientInputStream(VicariaServer server, VicariaHTTPSession connection, InputStream a) {
+    public VicariaClientInputStream(VicariaServer server, VicariaHTTPSession vicariaHttpSession, InputStream a) {
         super(a);
-        this.server = server;
-        this.connection = connection;
+        VicariaClientInputStream.server = server;
+        this.vicariaHttpSession = vicariaHttpSession;
     }
 
     /**
      * Handler for the actual HTTP request
      *
+     * @param a
+     * @return 
      * @exception IOException
      */
+    @Override
     public int read(byte[] a) throws IOException {
-        statuscode = connection.SC_OK;
+        statuscode = VicariaHTTPSession.SC_OK;
         if (ssl) {
             return super.read(a);
         }
@@ -92,13 +102,13 @@ public class VicariaClientInputStream extends BufferedInputStream {
                 int methodID = server.getHttpMethod(buf);
                 switch (methodID) {
                     case -1:
-                        statuscode = connection.SC_NOT_SUPPORTED;
+                        statuscode = VicariaHTTPSession.SC_NOT_SUPPORTED;
                         break;
                     case 2:
                         ssl = true;
                     default:
                         InetAddress host = parseRequest(buf, methodID);
-                        if (statuscode != connection.SC_OK) {
+                        if (statuscode != VicariaHTTPSession.SC_OK) {
                             break; // error occured, go on with the next line
                         }
                         if (!server.use_proxy && !ssl) {
@@ -106,38 +116,40 @@ public class VicariaClientInputStream extends BufferedInputStream {
                             buf = method + " " + url + " " + server.getHttpVersion() + "\r\n";
                             lread = buf.length();
                         }
-                        if ((server.use_proxy && connection.notConnected()) || !host.equals(remote_host)) {
+                        if ((server.use_proxy && vicariaHttpSession.notConnected()) || !host.equals(remote_host)) {
                             if (server.debug) {
                                 server.writeLog("read_f: STATE_CONNECT_TO_NEW_HOST");
                             }
-                            statuscode = connection.SC_CONNECTING_TO_HOST;
+                            statuscode = VicariaHTTPSession.SC_CONNECTING_TO_HOST;
                             remote_host = host;
                         }
                         /* -------------------------
 					* url blocking (only "GET" method)
 					* -------------------------*/
-                        if (server.block_urls && methodID == 0 && statuscode != connection.SC_FILE_REQUEST) {
+                        if (VicariaServer.block_urls && methodID == 0 && statuscode != VicariaHTTPSession.SC_FILE_REQUEST) {
                             if (server.debug) {
                                 System.out.println("Searching match...");
                             }
                             VicariaURLMatch match;
                             match = server.findMatch(this.remote_host_name + url);
                             if (match != null) {
-                                if (server.debug) {
-                                    System.out.println("Match found!");
-                                }
+                                //if (server.debug) {
+                                    LOGGER.info("Match found!");
+                                    //System.out.println();
+                                //
                                 cookies_enabled = match.getCookiesEnabled();
                                 if (match.getActionIndex() == -1) {
                                     break;
                                 }
-                                OnURLAction action = (OnURLAction) server.getURLActions().elementAt(match.getActionIndex());
+                                OnURLAction action;
+                                action = (OnURLAction) server.getURLActions().get(match.getActionIndex());
                                 if (action.onAccesssDeny()) {
-                                    statuscode = connection.SC_URL_BLOCKED;
+                                    statuscode = VicariaHTTPSession.SC_URL_BLOCKED;
                                     if (action.onAccessDenyWithCustomText()) {
                                         errordescription = action.getCustomErrorText();
                                     }
                                 } else if (action.onAccessRedirect()) {
-                                    statuscode = connection.SC_MOVED_PERMANENTLY;
+                                    statuscode = VicariaHTTPSession.SC_MOVED_PERMANENTLY;
                                     errordescription = action.newLocation();
                                 }
                             }//end if match!=null)
@@ -150,15 +162,15 @@ public class VicariaClientInputStream extends BufferedInputStream {
 				*-----------------------------------------------*/
                 if (server.startsWith(buf.toUpperCase(), "CONTENT-LENGTH")) {
                     String clen = buf.substring(16);
-                    if (clen.indexOf("\r") != -1) {
+                    if (clen.contains("\r")) {
                         clen = clen.substring(0, clen.indexOf("\r"));
-                    } else if (clen.indexOf("\n") != -1) {
+                    } else if (clen.contains("\n")) {
                         clen = clen.substring(0, clen.indexOf("\n"));
                     }
                     try {
                         content_len = Integer.parseInt(clen);
                     } catch (NumberFormatException e) {
-                        statuscode = connection.SC_CLIENT_ERROR;
+                        statuscode = VicariaHTTPSession.SC_CLIENT_ERROR;
                     }
                     if (server.debug) {
                         server.writeLog("read_f: content_len: " + content_len);
@@ -215,7 +227,7 @@ public class VicariaClientInputStream extends BufferedInputStream {
             if (server.debug) {
                 server.writeLog("header_length=0, setting status to SC_CONNECTION_CLOSED (buggy request)");
             }
-            statuscode = connection.SC_CONNECTION_CLOSED;
+            statuscode = VicariaHTTPSession.SC_CONNECTION_CLOSED;
         }
 
         for (int i = 0; i < header_length; i++) {
@@ -232,12 +244,13 @@ public class VicariaClientInputStream extends BufferedInputStream {
             body = false;
         }
 
-        return (statuscode == connection.SC_OK) ? header_length : -1; // return -1 with an error
+        return (statuscode == VicariaHTTPSession.SC_OK) ? header_length : -1; // return -1 with an error
     }
 
     /**
      * reads a line
      *
+     * @return 
      * @exception IOException
      */
     public String getLine() throws IOException {
@@ -260,6 +273,8 @@ public class VicariaClientInputStream extends BufferedInputStream {
      * Parser for the first (!) line from the HTTP request<BR>
      * Sets up the URL, method and remote hostname.
      *
+     * @param a
+     * @param method_index
      * @return an InetAddress for the hostname, null on errors with a
      * statuscode!=SC_OK
      */
@@ -278,16 +293,16 @@ public class VicariaClientInputStream extends BufferedInputStream {
             if (pos == -1) { // occours with "GET / HTTP/1.1"
                 url = a.substring(a.indexOf(" ") + 1, a.lastIndexOf(" "));
                 if (method_index == 0) { // method_index==0 --> GET
-                    if (url.indexOf(server.WEB_CONFIG_FILE) != -1) {
-                        statuscode = connection.SC_CONFIG_RQ;
+                    if (url.contains(server.WEB_CONFIG_FILE)) {
+                        statuscode = VicariaHTTPSession.SC_CONFIG_RQ;
                     } else {
-                        statuscode = connection.SC_FILE_REQUEST;
+                        statuscode = VicariaHTTPSession.SC_FILE_REQUEST;
                     }
                 } else {
-                    if (method_index == 1 && url.indexOf(server.WEB_CONFIG_FILE) != -1) { // allow "POST" for admin log in
-                        statuscode = connection.SC_CONFIG_RQ;
+                    if (method_index == 1 && url.contains(server.WEB_CONFIG_FILE)) { // allow "POST" for admin log in
+                        statuscode = VicariaHTTPSession.SC_CONFIG_RQ;
                     } else {
-                        statuscode = connection.SC_INTERNAL_SERVER_ERROR;
+                        statuscode = VicariaHTTPSession.SC_INTERNAL_SERVER_ERROR;
                         errordescription = "This WWW proxy supports only the \"GET\" method while acting as webserver.";
                     }
                 }
@@ -297,7 +312,7 @@ public class VicariaClientInputStream extends BufferedInputStream {
         }
         pos = f.indexOf(" "); // locate space, should be the space before "HTTP/1.1"
         if (pos == -1) { // buggy request
-            statuscode = connection.SC_CLIENT_ERROR;
+            statuscode = VicariaHTTPSession.SC_CLIENT_ERROR;
             errordescription = "Your browser sent an invalid request: \"" + a + "\"";
             return null;
         }
@@ -313,7 +328,7 @@ public class VicariaClientInputStream extends BufferedInputStream {
         pos = f.indexOf(":"); // check for the portnumber
         if (pos != -1) {
             String l_port = f.substring(pos + 1);
-            l_port = l_port.indexOf(" ") != -1 ? l_port.substring(0, l_port.indexOf(" ")) : l_port;
+            l_port = l_port.contains(" ") ? l_port.substring(0, l_port.indexOf(" ")) : l_port;
             int i_port = 80;
             try {
                 i_port = Integer.parseInt(l_port);
@@ -328,25 +343,28 @@ public class VicariaClientInputStream extends BufferedInputStream {
         remote_host_name = f;
         InetAddress address = null;
         if (server.log_access) {
-            server.logAccess(connection.getLocalSocket().getInetAddress().getHostAddress() + " " + method + " " + getFullURL());
+            server.logAccess(vicariaHttpSession.getLocalSocket().getInetAddress().getHostAddress() + " " + method + " " + getFullURL());
         }
         try {
             address = InetAddress.getByName(f);
             if (remote_port == server.port && address.equals(InetAddress.getLocalHost())) {
-                if (url.indexOf(server.WEB_CONFIG_FILE) != -1 && (method_index == 0 || method_index == 1)) {
-                    statuscode = connection.SC_CONFIG_RQ;
+                if (url.contains(server.WEB_CONFIG_FILE) && (method_index == 0 || method_index == 1)) {
+                    statuscode = VicariaHTTPSession.SC_CONFIG_RQ;
                 } else if (method_index > 0) {
-                    statuscode = connection.SC_INTERNAL_SERVER_ERROR;
+                    statuscode = VicariaHTTPSession.SC_INTERNAL_SERVER_ERROR;
                     errordescription = "This WWW proxy supports only the \"GET\" method while acting as webserver.";
                 } else {
-                    statuscode = connection.SC_FILE_REQUEST;
+                    statuscode = VicariaHTTPSession.SC_FILE_REQUEST;
                 }
             }
         } catch (UnknownHostException e_u_host) {
+            
             if (!server.use_proxy) {
-                statuscode = connection.SC_HOST_NOT_FOUND;
+                statuscode = VicariaHTTPSession.SC_HOST_NOT_FOUND;
             }
+            LOGGER.error(e_u_host.getMessage());
         }
+        
         return address;
     }
 

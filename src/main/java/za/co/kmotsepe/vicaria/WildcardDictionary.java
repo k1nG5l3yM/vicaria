@@ -44,36 +44,47 @@ import java.util.*;
 // <A HREF="/resources/classes/Acme.tar.gz">Fetch the entire Acme package.</A>
 // <P>
 // @see Acme.Utils#match
+
+/**
+ * @author Jef Poskanzer <jef@acme.com>
+ * @author Kingsley Motsepe <kmotsepe@gmail.com>
+ * @since %G%
+ * @version %I%
+ */
 public class WildcardDictionary extends Dictionary implements java.io.Serializable {
 
-    private Vector keys;
-    private Vector elements;
+    private final ArrayList keys;
+    private final ArrayList elements;
 
     /// Constructor.
     public WildcardDictionary() {
-        keys = new Vector();
-        elements = new Vector();
+        keys = new ArrayList();
+        elements = new ArrayList();
     }
 
     /// Returns the number of elements contained within the dictionary.
+    @Override
     public int size() {
         return elements.size();
     }
 
     /// Returns true if the dictionary contains no elements.
+    @Override
     public boolean isEmpty() {
         return size() == 0;
     }
 
     /// Returns an enumeration of the dictionary's keys.
+    @Override
     public Enumeration keys() {
-        return keys.elements();
+        return Collections.enumeration(keys);
     }
 
     /// Returns an enumeration of the elements. Use the Enumeration methods
     // on the returned object to fetch the elements sequentially.
+    @Override
     public Enumeration elements() {
-        return elements.elements();
+        return Collections.enumeration(elements);
     }
 
     /// Gets the object associated with the specified key in the dictionary.
@@ -82,12 +93,13 @@ public class WildcardDictionary extends Dictionary implements java.io.Serializab
     // @param key the string to match
     // @returns the element for the key, or null if there's no match
     // @see Acme.Utils#match
+    @Override
     public synchronized Object get(Object key) {
         String sKey = (String) key;
         for (int i = 0; i < keys.size(); ++i) {
-            String thisKey = (String) keys.elementAt(i);
+            String thisKey = (String) keys.get(i);
             if (match(thisKey, sKey)) {
-                return elements.elementAt(i);
+                return elements.get(i);
             }
         }
         return null;
@@ -101,15 +113,16 @@ public class WildcardDictionary extends Dictionary implements java.io.Serializab
     // @return the old value of the key, or null if it did not have one.
     // @exception NullPointerException If the value of the specified
     // element is null.
+    @Override
     public synchronized Object put(Object key, Object element) {
         int i = keys.indexOf(key);
         if (i != -1) {
-            Object oldElement = elements.elementAt(i);
-            elements.setElementAt(element, i);
+            Object oldElement = elements.get(i);
+            elements.add(i, element);
             return oldElement;
         } else {
-            keys.addElement(key);
-            elements.addElement(element);
+            keys.add(key);
+            elements.add(element);
             return null;
         }
     }
@@ -118,12 +131,13 @@ public class WildcardDictionary extends Dictionary implements java.io.Serializab
     // key is not present.
     // @param key the key that needs to be removed
     // @return the value of key, or null if the key was not found.
+    @Override
     public synchronized Object remove(Object key) {
         int i = keys.indexOf(key);
         if (i != -1) {
-            Object oldElement = elements.elementAt(i);
-            keys.removeElementAt(i);
-            elements.removeElementAt(i);
+            Object oldElement = elements.get(i);
+            keys.remove(i);
+            elements.remove(i);
             return oldElement;
         } else {
             return null;
@@ -133,6 +147,9 @@ public class WildcardDictionary extends Dictionary implements java.io.Serializab
     /**
      * Checks whether a string matches a given wildcard pattern. Only does ? and
      * *, and multiple patterns separated by |.
+     * @param pattern
+     * @param string
+     * @return 
      */
     public static boolean match(String pattern, String string) {
         for (int p = 0;; ++p) {

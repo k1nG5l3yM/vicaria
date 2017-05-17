@@ -20,6 +20,9 @@ public interface VicariaInputStream {
 
     /**
      * reads the data
+     * @param b
+     * @return 
+     * @throws java.io.IOException
      */
     public int read_f(byte[] b) throws IOException;
 }
