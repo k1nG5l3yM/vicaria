@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>za.co.kmotsepe</groupId>
     <artifactId>vicaria</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,7 +33,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
                             <transformers>
                                 <transformer implementation=
                       "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
@@ -63,7 +63,37 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <copy file="${project.build.outputDirectory}/vicaria.bat"
+                                      toFile="${basedir}/src/main/resources/vicaria.bat" overwrite="true" />
+                                <copy file="${project.build.outputDirectory}/vicaria.sh"
+                                      toFile="${basedir}/src/main/resources/vicaria.sh" overwrite="true" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources/</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/vicaria.sh</include>
+                    <include>**/vicaria.bat</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
     <dependencies>
         <dependency>
@@ -85,6 +115,12 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 </project>

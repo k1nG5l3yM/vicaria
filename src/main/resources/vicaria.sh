@@ -1,1 +1,1 @@
-java -jar vicaria.jar
+java -jar vicaria-0.5.0.jar
