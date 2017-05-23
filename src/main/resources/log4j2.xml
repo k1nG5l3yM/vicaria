@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
-  <Appenders>
-    <Console name="console" target="SYSTEM_OUT">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-    </Console>
-    <File name="logfile" fileName="server.log" immediateFlush="false" append="false">
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <File name="logfile" fileName="vicaria.log" immediateFlush="false" append="false">
             <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
-  </Appenders>
-  <Loggers>
-    <Root level="debug">
-      <AppenderRef ref="console"/>
-      <AppenderRef ref="logfile"/>
-    </Root>
-  </Loggers>
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="logfile"/>
+        </Root>
+    </Loggers>
 </Configuration>
