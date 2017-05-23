@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
  */
 public class VicariaClientInputStream extends BufferedInputStream {
 
+    //TODO To convert class to Utility
     //private boolean filter = false;
     private String buf;
     private int lread = 0;
@@ -54,7 +55,7 @@ public class VicariaClientInputStream extends BufferedInputStream {
     public String method;
     public int remote_port = 0;
     public int post_data_len = 0;
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(VicariaAdmin.class);
 
     public int getHeaderLength() {
@@ -69,7 +70,8 @@ public class VicariaClientInputStream extends BufferedInputStream {
         return remote_host_name;
     }
 
-    public VicariaClientInputStream(VicariaServer server, VicariaHTTPSession vicariaHttpSession, InputStream a) {
+    public VicariaClientInputStream(VicariaServer server,
+            VicariaHTTPSession vicariaHttpSession, InputStream a) {
         super(a);
         VicariaClientInputStream.server = server;
         this.vicariaHttpSession = vicariaHttpSession;
@@ -79,7 +81,7 @@ public class VicariaClientInputStream extends BufferedInputStream {
      * Handler for the actual HTTP request
      *
      * @param a
-     * @return 
+     * @return
      * @exception IOException
      */
     @Override
@@ -118,7 +120,8 @@ public class VicariaClientInputStream extends BufferedInputStream {
                         }
                         if ((server.use_proxy && vicariaHttpSession.notConnected()) || !host.equals(remote_host)) {
                             if (server.debug) {
-                                server.writeLog("read_f: STATE_CONNECT_TO_NEW_HOST");
+                                LOGGER.debug("read_f: STATE_CONNECT_TO_NEW_HOST");
+                                //server.writeLog();
                             }
                             statuscode = VicariaHTTPSession.SC_CONNECTING_TO_HOST;
                             remote_host = host;
@@ -127,15 +130,16 @@ public class VicariaClientInputStream extends BufferedInputStream {
 					* url blocking (only "GET" method)
 					* -------------------------*/
                         if (VicariaServer.block_urls && methodID == 0 && statuscode != VicariaHTTPSession.SC_FILE_REQUEST) {
-                            if (server.debug) {
-                                System.out.println("Searching match...");
-                            }
+                            //if (server.debug) {
+                            LOGGER.debug("Searching match");
+                            //System.out.println("Searching match...");
+                            //}
                             VicariaURLMatch match;
                             match = server.findMatch(this.remote_host_name + url);
                             if (match != null) {
                                 //if (server.debug) {
-                                    LOGGER.info("Match found!");
-                                    //System.out.println();
+                                LOGGER.info("Match found!");
+                                //System.out.println();
                                 //
                                 cookies_enabled = match.getCookiesEnabled();
                                 if (match.getActionIndex() == -1) {
@@ -172,9 +176,10 @@ public class VicariaClientInputStream extends BufferedInputStream {
                     } catch (NumberFormatException e) {
                         statuscode = VicariaHTTPSession.SC_CLIENT_ERROR;
                     }
-                    if (server.debug) {
-                        server.writeLog("read_f: content_len: " + content_len);
-                    }
+                    //if (server.debug) {
+                        LOGGER.debug("read_f: content_len: " + content_len);
+                        //server.writeLog("read_f: content_len: " + content_len);
+                    //}
                     if (!ssl) {
                         body = true; // Note: in HTTP/1.1 any method can have a body, not only "POST"
                     }
@@ -213,9 +218,10 @@ public class VicariaClientInputStream extends BufferedInputStream {
             }
             if (buf != null) {
                 rq += buf;
-                if (server.debug) {
-                    server.writeLog(buf);
-                }
+                //if (server.debug) {
+                    //server.writeLog(buf);
+                    LOGGER.debug(buf);
+                //}
                 header_length += lread;
             }
             buf = getLine();
@@ -250,7 +256,7 @@ public class VicariaClientInputStream extends BufferedInputStream {
     /**
      * reads a line
      *
-     * @return 
+     * @return
      * @exception IOException
      */
     public String getLine() throws IOException {
@@ -279,9 +285,10 @@ public class VicariaClientInputStream extends BufferedInputStream {
      * statuscode!=SC_OK
      */
     public InetAddress parseRequest(String a, int method_index) {
-        if (server.debug) {
-            server.writeLog(a);
-        }
+        //if (server.debug) {
+        LOGGER.debug(a);
+        //server.writeLog(a);
+        //}
         String f;
         int pos;
         url = "";
@@ -333,7 +340,7 @@ public class VicariaClientInputStream extends BufferedInputStream {
             try {
                 i_port = Integer.parseInt(l_port);
             } catch (NumberFormatException e_get_host) {
-                server.writeLog("get_Host :" + e_get_host + " !!!!");
+                LOGGER.error(e_get_host.getMessage());
             }
             f = f.substring(0, pos);
             remote_port = i_port;
@@ -358,13 +365,13 @@ public class VicariaClientInputStream extends BufferedInputStream {
                 }
             }
         } catch (UnknownHostException e_u_host) {
-            
+
             if (!server.use_proxy) {
                 statuscode = VicariaHTTPSession.SC_HOST_NOT_FOUND;
             }
             LOGGER.error(e_u_host.getMessage());
         }
-        
+
         return address;
     }
 
@@ -379,7 +386,7 @@ public class VicariaClientInputStream extends BufferedInputStream {
 
     /**
      * @return the full qualified URL of the actual request.
-     * @since 0.4.0
+     * @since %I%
      */
     public String getFullURL() {
         return "http" + (ssl ? "s" : "") + "://" + getRemoteHostName()
@@ -388,7 +395,7 @@ public class VicariaClientInputStream extends BufferedInputStream {
 
     /**
      * @return status-code for the actual request
-     * @since 0.3.5
+     * @since %I%
      */
     public int getStatusCode() {
         return statuscode;
