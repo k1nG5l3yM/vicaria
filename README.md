@@ -1,4 +1,8 @@
-# .:Vicaria:. [![Build Status](https://travis-ci.org/k1nG5l3yM/vicaria.svg?branch=master)](https://travis-ci.org/k1nG5l3yM/vicaria)
+# .:Vicaria:.   
+[![Build Status](https://travis-ci.org/k1nG5l3yM/vicaria.svg?branch=master)](https://travis-ci.org/k1nG5l3yM/vicaria)
+![Quality Gate]https://sonarqube.com/api/badges/gate?key=za.co.kmotsepe:vicaria)](https://sonarqube.com/dashboard/index/za.co.kmotsepe:vicaria)
+[![Technical debt ratio](https://sonarqube.com/api/badges/measure?key=za.co.kmotsepe:vicaria&metric=sqale_debt_ratio)](https://sonarqube.com/dashboard/index/za.co.kmotsepe:vicaria) 
+
 
 ## What is it?
 Vicaria is a Java based open source http proxy server cloned and rebranded from the Java HTTP Proxy Server (jHTTPp2), developed by Benjamin Kohl - http://jhttp2.sourceforge.net  
