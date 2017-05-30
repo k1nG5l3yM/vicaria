@@ -324,7 +324,8 @@ public class VicariaServer implements Runnable {
 
     public void closeLog() {
         try {
-            writeLog("Server shutdown.");
+            LOGGER.info("Server shutdown");
+            //writeLog("Server shutdown.");
             logfile.flush();
             logfile.close();
             access_logfile.close();
@@ -414,7 +415,8 @@ public class VicariaServer implements Runnable {
             try {
                 serverproperties.load(new DataInputStream(new FileInputStream(SERVER_PROPERTIES_FILE)));
             } catch (IOException e) {
-                writeLog("getServerProperties(): " + e.getMessage());
+                LOGGER.error(e.getMessage());
+                //writeLog("getServerProperties(): " + e.getMessage());
             }
         }
         return serverproperties;
@@ -430,7 +432,8 @@ public class VicariaServer implements Runnable {
         try {
             serverproperties.store(new FileOutputStream(SERVER_PROPERTIES_FILE), "Jhttpp2Server main properties. Look at the README file for further documentation.");
         } catch (IOException e) {
-            writeLog("storeServerProperties(): " + e.getMessage());
+            LOGGER.error(e.getMessage());
+            //("storeServerProperties(): " + e.getMessage());
         }
     }
 

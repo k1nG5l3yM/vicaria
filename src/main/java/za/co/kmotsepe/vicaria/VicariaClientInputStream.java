@@ -230,9 +230,10 @@ public class VicariaClientInputStream extends BufferedInputStream {
         header_length += lread;
 
         if (header_length == 0) {
-            if (server.debug) {
-                server.writeLog("header_length=0, setting status to SC_CONNECTION_CLOSED (buggy request)");
-            }
+            //if (server.debug) {
+            LOGGER.debug("header_length=0, setting status to SC_CONNECTION_CLOSED (buggy request)");
+                //server.writeLog("header_length=0, setting status to SC_CONNECTION_CLOSED (buggy request)");
+            //}
             statuscode = VicariaHTTPSession.SC_CONNECTION_CLOSED;
         }
 
