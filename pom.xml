@@ -35,8 +35,7 @@
                         <configuration>
                             <shadedArtifactAttached>false</shadedArtifactAttached>
                             <transformers>
-                                <transformer implementation=
-                      "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>za.co.kmotsepe.vicaria.VicariaLauncher</mainClass>
                                 </transformer>
                             </transformers>
@@ -91,6 +90,7 @@
                 <includes>
                     <include>**/vicaria.sh</include>
                     <include>**/vicaria.bat</include>
+                    <include>**/log4j2.xml</include>
                 </includes>
             </resource>
         </resources>
