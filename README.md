@@ -1,4 +1,4 @@
-# .:Vicaria:.
+# .:Vicaria:. [![Build Status](https://travis-ci.org/k1nG5l3yM/vicaria.svg?branch=master)](https://travis-ci.org/k1nG5l3yM/vicaria)
 
 ## What is it?
 Vicaria is a Java based open source http proxy server cloned and rebranded from the Java HTTP Proxy Server (jHTTPp2), developed by Benjamin Kohl - http://jhttp2.sourceforge.net  
