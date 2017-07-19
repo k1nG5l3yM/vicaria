@@ -3,6 +3,7 @@
 [![Quality Gate](https://sonarqube.com/api/badges/gate?key=za.co.kmotsepe:vicaria)](https://sonarqube.com/dashboard/index/za.co.kmotsepe:vicaria)
 [![Technical debt ratio](https://sonarqube.com/api/badges/measure?key=za.co.kmotsepe:vicaria&metric=sqale_debt_ratio)](https://sonarqube.com/dashboard/index/za.co.kmotsepe:vicaria)
 [![Dependency Status](https://www.versioneye.com/user/projects/596f3a650fb24f00512fb275/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/596f3a650fb24f00512fb275)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/24a99fd928fa420b946be01dedeb99ca)](https://www.codacy.com/app/kmotsepe/vicaria?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=k1nG5l3yM/vicaria&amp;utm_campaign=Badge_Grade)
 
 
 ## What is it?
