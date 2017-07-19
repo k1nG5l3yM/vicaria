@@ -1,7 +1,8 @@
 # .:Vicaria:.   
 [![Build Status](https://travis-ci.org/k1nG5l3yM/vicaria.svg?branch=master)](https://travis-ci.org/k1nG5l3yM/vicaria)
 [![Quality Gate](https://sonarqube.com/api/badges/gate?key=za.co.kmotsepe:vicaria)](https://sonarqube.com/dashboard/index/za.co.kmotsepe:vicaria)
-[![Technical debt ratio](https://sonarqube.com/api/badges/measure?key=za.co.kmotsepe:vicaria&metric=sqale_debt_ratio)](https://sonarqube.com/dashboard/index/za.co.kmotsepe:vicaria) 
+[![Technical debt ratio](https://sonarqube.com/api/badges/measure?key=za.co.kmotsepe:vicaria&metric=sqale_debt_ratio)](https://sonarqube.com/dashboard/index/za.co.kmotsepe:vicaria)
+[![Dependency Status](https://www.versioneye.com/user/projects/596f3a650fb24f00512fb275/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/596f3a650fb24f00512fb275)
 
 
 ## What is it?
