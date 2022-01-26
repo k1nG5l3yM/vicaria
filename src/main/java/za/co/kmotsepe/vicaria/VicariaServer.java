@@ -26,15 +26,16 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Benjamin Kohl
- * @author Kingsley Motsepe <kmotsepe@gmail.com>
+ * @author Kingsley Motsepe
  * @since %G%
  * @version %I%
  */
 public class VicariaServer implements Runnable {
 
-    //TODO Most properties here need to load from properties file. Especially credentials
+    // TODO Most properties here need to load from properties file. Especially
+    // credentials
     private static final String CRLF = "\r\n";
-    private static final String VERSION = "0.4.62";
+    private static final String VERSION = "0.5.1";
     private static final String V_SPECIAL = " 2003-05-20";
     private final String HTTP_VERSION = "HTTP/1.1";
 
@@ -55,7 +56,7 @@ public class VicariaServer implements Runnable {
     private WildcardDictionary dic = new WildcardDictionary();
     private ArrayList urlactions;
 
-    //TODO This has to go. Will place in default config file :)
+    // TODO This has to go. Will place in default config file :)
     public final int DEFAULT_SERVER_PORT = 8088;
     public final String WEB_CONFIG_FILE = "admin/jp2-config";
 
@@ -66,7 +67,7 @@ public class VicariaServer implements Runnable {
     public long config_auth = 0;
     public long config_session_id = 0;
 
-    //TODO This has to go. Will place in default config file :)
+    // TODO This has to go. Will place in default config file :)
     public String config_user = "root";
     public String config_password = "geheim";
 
@@ -93,20 +94,21 @@ public class VicariaServer implements Runnable {
         } catch (Exception e_load) {
             LOGGER.error("Error while resoring settings: " + e_load.getMessage());
         }
-        
+
         try {
             listen = new ServerSocket(port);
         } catch (BindException e_bind_socket) {
-           LOGGER.error("Socket " + port + " is already in use (Another Vicaria proxy running?) " + e_bind_socket.getMessage());
+            LOGGER.error("Socket " + port + " is already in use (Another Vicaria proxy running?) "
+                    + e_bind_socket.getMessage());
         } catch (IOException e_io_socket) {
             LOGGER.error("Error while creating server socket on port " + port + ". " + e_io_socket.getMessage());
         }
     }
 
     public VicariaServer() {
-        //TODO maybe load this from a properties/text file?
-        //TODO have launcher message display in 'bootstrap' function?
-        
+        // TODO maybe load this from a properties/text file?
+        // TODO have launcher message display in 'bootstrap' function?
+
         bootStrap();
     }
 
@@ -119,7 +121,7 @@ public class VicariaServer implements Runnable {
         try {
             while (true) {
                 Socket client = listen.accept();
-                //TODO rather have a session builder? 
+                // TODO rather have a session builder?
                 new VicariaHTTPSession(this, client);
             }
         } catch (IOException e) {
@@ -157,10 +159,12 @@ public class VicariaServer implements Runnable {
             return 3;
         }
 
-        return -1;/* No match...
-
-    Following methods are not implemented:
-    || startsWith(d,"TRACE") */
+        return -1;/*
+                   * No match...
+                   * 
+                   * Following methods are not implemented:
+                   * || startsWith(d,"TRACE")
+                   */
     }
 
     public boolean startsWith(String a, String what) {
@@ -217,7 +221,7 @@ public class VicariaServer implements Runnable {
      *
      * @since 0.2.10
      */
-    public void restoreSettings()//throws Exception
+    public void restoreSettings()// throws Exception
     {
         getServerProperties();
         use_proxy = Boolean.valueOf(serverproperties.getProperty("server.http-proxy", "false"));
@@ -228,9 +232,11 @@ public class VicariaServer implements Runnable {
         }
         proxy_port = Integer.parseInt(serverproperties.getProperty("server.http-proxy.port", "8080"));
         block_urls = Boolean.valueOf(serverproperties.getProperty("server.filter.url", "false"));
-        http_useragent = serverproperties.getProperty("server.filter.http.useragent", "Mozilla/4.0 (compatible; MSIE 4.0; WindowsNT 5.0)");
+        http_useragent = serverproperties.getProperty("server.filter.http.useragent",
+                "Mozilla/4.0 (compatible; MSIE 4.0; WindowsNT 5.0)");
         filter_http = Boolean.valueOf(serverproperties.getProperty("server.filter.http", "false"));
-        enable_cookies_by_default = Boolean.valueOf(serverproperties.getProperty("server.enable-cookies-by-default", "true"));
+        enable_cookies_by_default = Boolean
+                .valueOf(serverproperties.getProperty("server.enable-cookies-by-default", "true"));
         debug = Boolean.valueOf(serverproperties.getProperty("server.debug-logging", "false"));
         port = Integer.parseInt(serverproperties.getProperty("server.port", "8088"));
         log_access = Boolean.parseBoolean(serverproperties.getProperty("server.access.log", "false"));
@@ -243,13 +249,14 @@ public class VicariaServer implements Runnable {
         try {
 
             access_logfile = new BufferedWriter(new FileWriter(log_access_filename, true));
-            // Restore the WildcardDioctionary and the URLActions with the ObjectInputStream (settings.dat)...
+            // Restore the WildcardDioctionary and the URLActions with the ObjectInputStream
+            // (settings.dat)...
             ObjectInputStream obj_in;
             File file = new File(DATA_FILE);
             if (!file.exists()) {
                 if (!file.createNewFile() || !file.canWrite()) {
                     throw new IOException("Can't create or write to file " + file.toString());
-                    //setErrorMsg("Can't create or write to file " + file.toString());
+                    // setErrorMsg("Can't create or write to file " + file.toString());
                 } else {
                     saveSettings();
                 }
@@ -257,12 +264,12 @@ public class VicariaServer implements Runnable {
 
             obj_in = new ObjectInputStream(new FileInputStream(file));
             dic = (WildcardDictionary) obj_in.readObject();
-            //Object[] objects = (Object[])obj_in.readObject();
-            urlactions = new ArrayList(Arrays.asList((Object[])obj_in.readObject()));
+            // Object[] objects = (Object[])obj_in.readObject();
+            urlactions = new ArrayList(Arrays.asList((Object[]) obj_in.readObject()));
             obj_in.close();
         } catch (IOException | ClassNotFoundException e) {
             LOGGER.error(e.getMessage());
-            //setErrorMsg("restoreSettings(): " + e.getMessage());
+            // setErrorMsg("restoreSettings(): " + e.getMessage());
         }
     }
 
@@ -287,7 +294,7 @@ public class VicariaServer implements Runnable {
         http_useragent = ua;
     }
 
-    //TODO this won't be needed anymore. Rather use SLF4J
+    // TODO this won't be needed anymore. Rather use SLF4J
     /**
      * writes into the server log file and adds a new line
      *
@@ -298,7 +305,7 @@ public class VicariaServer implements Runnable {
         writeLog(s, true);
     }
 
-    //TODO this won't be needed anymore. Rather use SLF4J
+    // TODO this won't be needed anymore. Rather use SLF4J
     /**
      * writes to the server log file
      *
@@ -325,7 +332,7 @@ public class VicariaServer implements Runnable {
     public void closeLog() {
         try {
             LOGGER.info("Server shutdown");
-            //writeLog("Server shutdown.");
+            // writeLog("Server shutdown.");
             logfile.flush();
             logfile.close();
             access_logfile.close();
@@ -416,7 +423,7 @@ public class VicariaServer implements Runnable {
                 serverproperties.load(new DataInputStream(new FileInputStream(SERVER_PROPERTIES_FILE)));
             } catch (IOException e) {
                 LOGGER.error(e.getMessage());
-                //writeLog("getServerProperties(): " + e.getMessage());
+                // writeLog("getServerProperties(): " + e.getMessage());
             }
         }
         return serverproperties;
@@ -430,10 +437,11 @@ public class VicariaServer implements Runnable {
             return;
         }
         try {
-            serverproperties.store(new FileOutputStream(SERVER_PROPERTIES_FILE), "Jhttpp2Server main properties. Look at the README file for further documentation.");
+            serverproperties.store(new FileOutputStream(SERVER_PROPERTIES_FILE),
+                    "Jhttpp2Server main properties. Look at the README file for further documentation.");
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
-            //("storeServerProperties(): " + e.getMessage());
+            // ("storeServerProperties(): " + e.getMessage());
         }
     }
 
@@ -461,8 +469,8 @@ public class VicariaServer implements Runnable {
     private void bootStrap() {
         LOGGER.info("Vicaria HTTP Proxy Server Release " + getServerVersion() + "\r\n"
                 + "Copyright (c) 2017 Kingsley Motsepe\r\n"
-                + "This software comes with ABSOLUTELY NO WARRANTY OF ANY KIND.\r\n"
-                + "https://github.com/k1nG5l3yM/vicaria");
+                + "This software comes with ABSOLUTELY NO WARRANTY OF ANY KIND.\r\n\n"
+                + "Project Home: https://github.com/k1nG5l3yM/vicaria");
         init();
     }
 
