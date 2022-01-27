@@ -2,7 +2,7 @@ package za.co.kmotsepe.vicaria;
 
 /**
  *
- * @author Kingsley Motsepe <kmotsepe@gmail.com>
+ * @author Kingsley Motsepe
  * @since %G%
  * @version %I%
  */
@@ -15,5 +15,5 @@ public class HttpFormatException extends Exception {
     public HttpFormatException(String message) {
         super(message);
     }
-    
+
 }

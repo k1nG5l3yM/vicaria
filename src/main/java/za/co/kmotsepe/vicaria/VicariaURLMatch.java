@@ -12,7 +12,7 @@ package za.co.kmotsepe.vicaria;
  * Benjamin Kohl
  *
  * @author Benjamin Kohl
- * @author Kingsley Motsepe <kmotsepe@gmail.com>
+ * @author Kingsley Motsepe
  * @since %G%
  * @version %I%
  */
@@ -22,13 +22,13 @@ public class VicariaURLMatch implements java.io.Serializable {
     String desc;
     boolean cookies_enabled;
     int actionindex;
-    
+
     /**
      * 
      * @param match
      * @param cookies_enabled
      * @param actionindex
-     * @param description 
+     * @param description
      */
     public VicariaURLMatch(String match, boolean cookies_enabled, int actionindex, String description) {
         this.match = match;
@@ -36,18 +36,18 @@ public class VicariaURLMatch implements java.io.Serializable {
         this.actionindex = actionindex;
         this.desc = description;
     }
-    
+
     /**
      * 
-     * @return 
+     * @return
      */
     public String getMatch() {
         return match;
     }
-    
+
     /**
      * 
-     * @return 
+     * @return
      */
     public boolean getCookiesEnabled() {
         return cookies_enabled;
@@ -56,18 +56,18 @@ public class VicariaURLMatch implements java.io.Serializable {
     public int getActionIndex() {
         return actionindex;
     }
-    
+
     /**
      * 
-     * @return 
+     * @return
      */
     public String getDescription() {
         return desc;
     }
-    
+
     /**
      * 
-     * @return 
+     * @return
      */
     @Override
     public String toString() {

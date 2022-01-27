@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * Application launcher class
  *
  * @author Benjamin Kohl
- * @author Kingsley Motsepe <kmotsepe@gmail.com>
+ * @author Kingsley Motsepe
  * @since %G%
  * @version %I%
  */
@@ -28,13 +28,14 @@ public class VicariaLauncher {
     private static final Logger LOGGER = LoggerFactory.getLogger(VicariaLauncher.class);
 
     public static void main(String[] args) {
-        //load ascii banner
+        // load ascii banner
         String asciiArt = FigletFont.convertOneLine(".:Vicaria - HTTP - Proxy:.");
         LOGGER.info("\n" + asciiArt);
-        
+
         server = new VicariaServer();
-        
-        //TODO maybe 'too much admin' here? Better to have this in the server class instead
+
+        // TODO maybe 'too much admin' here? Better to have this in the server class
+        // instead
         if (VicariaServer.error) {
             LOGGER.error(VicariaServer.error_msg);
         } else {

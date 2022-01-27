@@ -15,22 +15,22 @@ import java.io.IOException;
 
 /**
  * @author Benjamin Kohl
- * @author Kingsley Motsepe <kmotsepe@gmail.com>
+ * @author Kingsley Motsepe
  * @since %G%
  * @version %I%
  */
 public class VicariaServerInputStream extends BufferedInputStream implements VicariaInputStream {
 
     private final VicariaHTTPSession connection;
-    
+
     /**
      * 
      * @param server
      * @param connection
      * @param a
-     * @param filter 
+     * @param filter
      */
-    public VicariaServerInputStream(VicariaServer server, 
+    public VicariaServerInputStream(VicariaServer server,
             VicariaHTTPSession connection, InputStream a, boolean filter) {
         super(a);
         this.connection = connection;

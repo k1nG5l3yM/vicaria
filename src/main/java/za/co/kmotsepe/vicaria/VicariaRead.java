@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  * the BufferedOutputStream
  *
  * @author Benjamin Kohl
- * @author Kingsley Motsepe <kmotsepe@gmail.com>
+ * @author Kingsley Motsepe
  * @since %G%
  * @version %I%
  */
@@ -31,10 +31,11 @@ public class VicariaRead extends Thread {
     private final BufferedOutputStream out;
     private final VicariaHTTPSession connection;
     private static VicariaServer server;
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(VicariaRead.class);
 
-    public VicariaRead(VicariaServer server, VicariaHTTPSession connection, BufferedInputStream l_in, BufferedOutputStream l_out) {
+    public VicariaRead(VicariaServer server, VicariaHTTPSession connection, BufferedInputStream l_in,
+            BufferedOutputStream l_out) {
         in = l_in;
         out = l_out;
         this.connection = connection;
@@ -66,14 +67,18 @@ public class VicariaRead extends Thread {
         }
 
         try {
-            if (connection.getStatus() != VicariaHTTPSession.SC_CONNECTING_TO_HOST) // *uaaahhh*: fixes a very strange bug
+            if (connection.getStatus() != VicariaHTTPSession.SC_CONNECTING_TO_HOST) // *uaaahhh*: fixes a very strange
+                                                                                    // bug
             {
                 connection.getLocalSocket().close();
             }
-            // why? If we are connecting to a new host (and this thread is already running!) , the upstream
-            // socket will be closed. So we get here and close our own downstream socket..... and the browser
+            // why? If we are connecting to a new host (and this thread is already running!)
+            // , the upstream
+            // socket will be closed. So we get here and close our own downstream
+            // socket..... and the browser
             // displays an empty page because jhttpp2
-            // closes the connection..... so close the downstream socket only when NOT connecting to a new host....
+            // closes the connection..... so close the downstream socket only when NOT
+            // connecting to a new host....
         } catch (IOException e_socket_close) {
             LOGGER.error(e_socket_close.getMessage());
         }
@@ -86,7 +91,7 @@ public class VicariaRead extends Thread {
             LOGGER.error(e.getMessage());
         }
     }
-    
+
     /**
      * 
      */

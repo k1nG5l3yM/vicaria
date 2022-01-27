@@ -10,7 +10,7 @@ package za.co.kmotsepe.vicaria;
  * More Information and documentation: https://github.com/k1nG5l3yM/vicaria
  * 
  * @author Benjamin Kohl
- * @author Kingsley Motsepe <kmotsepe@gmail.com>
+ * @author Kingsley Motsepe
  * @since %G%
  * @version %I%
  */
@@ -20,8 +20,9 @@ public interface VicariaInputStream {
 
     /**
      * reads the data
+     * 
      * @param b
-     * @return 
+     * @return
      * @throws java.io.IOException
      */
     public int read_f(byte[] b) throws IOException;

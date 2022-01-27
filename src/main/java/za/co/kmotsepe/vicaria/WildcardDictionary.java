@@ -47,7 +47,7 @@ import java.util.*;
 
 /**
  * @author Jef Poskanzer <jef@acme.com>
- * @author Kingsley Motsepe <kmotsepe@gmail.com>
+ * @author Kingsley Motsepe
  * @since %G%
  * @version %I%
  */
@@ -106,8 +106,8 @@ public class WildcardDictionary extends Dictionary implements java.io.Serializab
     }
 
     /// Puts the specified element into the Dictionary, using the specified
-    // key.  The element may be retrieved by doing a get() with the same
-    // key.  The key and the element cannot be null.
+    // key. The element may be retrieved by doing a get() with the same
+    // key. The key and the element cannot be null.
     // @param key the specified wildcard-pattern key
     // @param value the specified element
     // @return the old value of the key, or null if it did not have one.
@@ -147,9 +147,10 @@ public class WildcardDictionary extends Dictionary implements java.io.Serializab
     /**
      * Checks whether a string matches a given wildcard pattern. Only does ? and
      * *, and multiple patterns separated by |.
+     * 
      * @param pattern
      * @param string
-     * @return 
+     * @return
      */
     public static boolean match(String pattern, String string) {
         for (int p = 0;; ++p) {

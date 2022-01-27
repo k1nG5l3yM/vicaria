@@ -21,14 +21,14 @@ import org.slf4j.LoggerFactory;
  * File: VicariaBufferedFilterStream.java
  *
  * @author Benjamin Kohl
- * @author KIngsley Motsepe <kmotsepe@gmail.com>
+ * @author KIngsley Motsepe
  * @since %G%
  * @version %I%
  */
 public class VicariaClientInputStream extends BufferedInputStream {
 
-    //TODO To convert class to Utility
-    //private boolean filter = false;
+    // TODO To convert class to Utility
+    // private boolean filter = false;
     private String buf;
     private int lread = 0;
     /**
@@ -121,25 +121,28 @@ public class VicariaClientInputStream extends BufferedInputStream {
                         if ((server.use_proxy && vicariaHttpSession.notConnected()) || !host.equals(remote_host)) {
                             if (server.debug) {
                                 LOGGER.debug("read_f: STATE_CONNECT_TO_NEW_HOST");
-                                //server.writeLog();
+                                // server.writeLog();
                             }
                             statuscode = VicariaHTTPSession.SC_CONNECTING_TO_HOST;
                             remote_host = host;
                         }
-                        /* -------------------------
-					* url blocking (only "GET" method)
-					* -------------------------*/
-                        if (VicariaServer.block_urls && methodID == 0 && statuscode != VicariaHTTPSession.SC_FILE_REQUEST) {
-                            //if (server.debug) {
+                        /*
+                         * -------------------------
+                         * url blocking (only "GET" method)
+                         * -------------------------
+                         */
+                        if (VicariaServer.block_urls && methodID == 0
+                                && statuscode != VicariaHTTPSession.SC_FILE_REQUEST) {
+                            // if (server.debug) {
                             LOGGER.debug("Searching match");
-                            //System.out.println("Searching match...");
-                            //}
+                            // System.out.println("Searching match...");
+                            // }
                             VicariaURLMatch match;
                             match = server.findMatch(this.remote_host_name + url);
                             if (match != null) {
-                                //if (server.debug) {
+                                // if (server.debug) {
                                 LOGGER.info("Match found!");
-                                //System.out.println();
+                                // System.out.println();
                                 //
                                 cookies_enabled = match.getCookiesEnabled();
                                 if (match.getActionIndex() == -1) {
@@ -156,14 +159,14 @@ public class VicariaClientInputStream extends BufferedInputStream {
                                     statuscode = VicariaHTTPSession.SC_MOVED_PERMANENTLY;
                                     errordescription = action.newLocation();
                                 }
-                            }//end if match!=null)
-                        } //end if (server.block...
+                            } // end if match!=null)
+                        } // end if (server.block...
                 } // end switch
-            }// end if(startline)
+            } // end if(startline)
             else {
                 /*-----------------------------------------------
-				* Content-Length parsing
-				*-----------------------------------------------*/
+                * Content-Length parsing
+                *-----------------------------------------------*/
                 if (server.startsWith(buf.toUpperCase(), "CONTENT-LENGTH")) {
                     String clen = buf.substring(16);
                     if (clen.contains("\r")) {
@@ -176,10 +179,10 @@ public class VicariaClientInputStream extends BufferedInputStream {
                     } catch (NumberFormatException e) {
                         statuscode = VicariaHTTPSession.SC_CLIENT_ERROR;
                     }
-                    //if (server.debug) {
-                        LOGGER.debug("read_f: content_len: " + content_len);
-                        //server.writeLog("read_f: content_len: " + content_len);
-                    //}
+                    // if (server.debug) {
+                    LOGGER.debug("read_f: content_len: " + content_len);
+                    // server.writeLog("read_f: content_len: " + content_len);
+                    // }
                     if (!ssl) {
                         body = true; // Note: in HTTP/1.1 any method can have a body, not only "POST"
                     }
@@ -190,15 +193,17 @@ public class VicariaClientInputStream extends BufferedInputStream {
                         buf = "Proxy-Connection: Keep-Alive\r\n";
                         lread = buf.length();
                     }
-                } /*else if (server.startsWith(buf,"Connection:"))
-              {
-                 if (!server.use_proxy)
-                 {
-                   buf="Connection: Keep-Alive\r\n"; //use always keep-alive
-                 lread=buf.length();
-                 }
-                 else buf=null;
-               }*/ /*-----------------------------------------------
+                } /*
+                   * else if (server.startsWith(buf,"Connection:"))
+                   * {
+                   * if (!server.use_proxy)
+                   * {
+                   * buf="Connection: Keep-Alive\r\n"; //use always keep-alive
+                   * lread=buf.length();
+                   * }
+                   * else buf=null;
+                   * }
+                   */ /*-----------------------------------------------
 		 * cookie crunch section
 			 	 *-----------------------------------------------*/ else if (server.startsWith(buf, "Cookie:")) {
                     if (!cookies_enabled) {
@@ -218,22 +223,23 @@ public class VicariaClientInputStream extends BufferedInputStream {
             }
             if (buf != null) {
                 rq += buf;
-                //if (server.debug) {
-                    //server.writeLog(buf);
-                    LOGGER.debug(buf);
-                //}
+                // if (server.debug) {
+                // server.writeLog(buf);
+                LOGGER.debug(buf);
+                // }
                 header_length += lread;
             }
             buf = getLine();
         }
-        rq += buf; //adds last line (should be an empty line) to the header String
+        rq += buf; // adds last line (should be an empty line) to the header String
         header_length += lread;
 
         if (header_length == 0) {
-            //if (server.debug) {
+            // if (server.debug) {
             LOGGER.debug("header_length=0, setting status to SC_CONNECTION_CLOSED (buggy request)");
-                //server.writeLog("header_length=0, setting status to SC_CONNECTION_CLOSED (buggy request)");
-            //}
+            // server.writeLog("header_length=0, setting status to SC_CONNECTION_CLOSED
+            // (buggy request)");
+            // }
             statuscode = VicariaHTTPSession.SC_CONNECTION_CLOSED;
         }
 
@@ -283,20 +289,20 @@ public class VicariaClientInputStream extends BufferedInputStream {
      * @param a
      * @param method_index
      * @return an InetAddress for the hostname, null on errors with a
-     * statuscode!=SC_OK
+     *         statuscode!=SC_OK
      */
     public InetAddress parseRequest(String a, int method_index) {
-        //if (server.debug) {
+        // if (server.debug) {
         LOGGER.debug(a);
-        //server.writeLog(a);
-        //}
+        // server.writeLog(a);
+        // }
         String f;
         int pos;
         url = "";
         if (ssl) {
             f = a.substring(8);
         } else {
-            method = a.substring(0, a.indexOf(" ")); //first word in the line
+            method = a.substring(0, a.indexOf(" ")); // first word in the line
             pos = a.indexOf(":"); // locate first :
             if (pos == -1) { // occours with "GET / HTTP/1.1"
                 url = a.substring(a.indexOf(" ") + 1, a.lastIndexOf(" "));
@@ -316,7 +322,7 @@ public class VicariaClientInputStream extends BufferedInputStream {
                 }
                 return null;
             }
-            f = a.substring(pos + 3); //removes "http://"
+            f = a.substring(pos + 3); // removes "http://"
         }
         pos = f.indexOf(" "); // locate space, should be the space before "HTTP/1.1"
         if (pos == -1) { // buggy request
@@ -324,8 +330,9 @@ public class VicariaClientInputStream extends BufferedInputStream {
             errordescription = "Your browser sent an invalid request: \"" + a + "\"";
             return null;
         }
-        f = f.substring(0, pos); //removes all after space
-        // if the url contains a space... it's not our mistake...(url's must never contain a space character)
+        f = f.substring(0, pos); // removes all after space
+        // if the url contains a space... it's not our mistake...(url's must never
+        // contain a space character)
         pos = f.indexOf("/"); // locate the first slash
         if (pos != -1) {
             url = f.substring(pos); // saves path without hostname
@@ -351,7 +358,8 @@ public class VicariaClientInputStream extends BufferedInputStream {
         remote_host_name = f;
         InetAddress address = null;
         if (server.log_access) {
-            server.logAccess(vicariaHttpSession.getLocalSocket().getInetAddress().getHostAddress() + " " + method + " " + getFullURL());
+            server.logAccess(vicariaHttpSession.getLocalSocket().getInetAddress().getHostAddress() + " " + method + " "
+                    + getFullURL());
         }
         try {
             address = InetAddress.getByName(f);
@@ -378,7 +386,7 @@ public class VicariaClientInputStream extends BufferedInputStream {
 
     /**
      * @return boolean whether the actual connection was established with the
-     * CONNECT method.
+     *         CONNECT method.
      * @since 0.2.21
      */
     public boolean isTunnel() {

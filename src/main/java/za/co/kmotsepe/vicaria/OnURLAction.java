@@ -13,7 +13,7 @@ package za.co.kmotsepe.vicaria;
  * Description: An OpenSource HTTP Proxy
  * Copyright:    Copyright (c) 2001 Benjamin Kohl
  * @author Benjamin Kohl
- * @author Kingsley Motsepe <kmotsepe@gmail.com>
+ * @author Kingsley Motsepe
  * @since %G%
  * @version %I%
  */
@@ -21,125 +21,125 @@ public class OnURLAction implements java.io.Serializable {
 
     private String customerrortext, desc, httppath, newlocation;
     private boolean log, block, customtext, http_rq, anotherlocation;
-    
+
     /**
      * 
-     * @param desc 
+     * @param desc
      */
     public OnURLAction(String desc) {
         this.desc = desc;
     }
-    
+
     /**
      * 
-     * @param customerrortext 
+     * @param customerrortext
      */
     public void denyAccess(String customerrortext) {
         this.block = true;
         this.customtext = true;
         this.customerrortext = customerrortext;
     }
-    
+
     /**
      * 
      */
     public void denyAccess() {
         block = true;
     }
-    
+
     /**
      * 
      */
     public void logAccess() {
         log = true;
     }
-    
+
     /**
      * 
-     * @param newlocation 
+     * @param newlocation
      */
     public void anotherLocation(String newlocation) {
         this.anotherlocation = true;
         this.newlocation = newlocation;
     }
-    
+
     /**
      * 
-     * @return 
+     * @return
      */
     public boolean onAccesssDeny() {
         return block;
     }
-    
+
     /**
      * 
-     * @return 
+     * @return
      */
     public boolean onAccessLog() {
         return log;
     }
-    
+
     /**
      * 
-     * @return 
+     * @return
      */
     public boolean onAccessDenyWithCustomText() {
         return customtext;
     }
-    
+
     /**
      * 
-     * @return 
+     * @return
      */
     public boolean onAccessSendHTTPRequest() {
         return http_rq;
     }
-    
+
     /**
      * 
-     * @return 
+     * @return
      */
     public boolean onAccessRedirect() {
         return this.anotherlocation;
     }
-    
+
     /**
      * 
-     * @return 
+     * @return
      */
     public String newLocation() {
         return this.newlocation;
     }
-    
+
     /**
      * 
      * @param http_rq
-     * @param httppath 
+     * @param httppath
      */
     public void setHTTPAction(boolean http_rq, String httppath) {
         this.http_rq = http_rq;
         this.httppath = httppath;
     }
-    
+
     /**
      * 
-     * @return 
+     * @return
      */
     public String getCustomErrorText() {
         return customerrortext;
     }
-    
+
     /**
      * 
-     * @return 
+     * @return
      */
     public String getDescription() {
         return desc;
     }
-    
+
     /**
      * 
-     * @return 
+     * @return
      */
     @Override
     public String toString() {
