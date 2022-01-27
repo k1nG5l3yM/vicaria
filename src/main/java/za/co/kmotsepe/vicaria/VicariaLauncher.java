@@ -1,5 +1,7 @@
 package za.co.kmotsepe.vicaria;
 
+import java.io.IOException;
+
 /* Written and copyright 2001-2003 Benjamin Kohl.
  * Distributed under the GNU General Public License; see the README file.
  * This code comes with NO WARRANTY.
@@ -29,7 +31,12 @@ public class VicariaLauncher {
 
     public static void main(String[] args) {
         // load ascii banner
-        String asciiArt = FigletFont.convertOneLine(".:Vicaria - HTTP - Proxy:.");
+        String asciiArt = "";
+        try {
+            asciiArt = FigletFont.convertOneLine(".:Vicaria - HTTP - Proxy:.");
+        } catch (IOException e) {
+            LOGGER.error("Failed to convert text to ascii banner");
+        }
         LOGGER.info("\n" + asciiArt);
 
         server = new VicariaServer();
